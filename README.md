@@ -8,7 +8,7 @@ The solution is implemented in Go using a Domain-Driven Design (DDD) approach.
 
 Partly because it’s the language I’ve been working with recently, but also because it’s a compiled, fast, and reliable language that is easy to package and deploy. From what I’ve seen, more and more fintech companies are adopting Go—at least for parts of their systems.
 
-**Why DDD (Domain-Driven Design)?***
+**Why DDD (Domain-Driven Design)?**
 
 DDD is also becoming increasingly popular.
 
@@ -35,7 +35,7 @@ Fintech is highly regulated, complex, and rapidly changing, with multiple busine
 - Supports auditability and compliance, since domain models make rules explicit and traceable.
 - Makes integration with external services (banks, payment networks, KYC providers) easier through decoupled interfaces.
 
-Key architectural principles in DDD
+***Key architectural principles in DDD***
 - Layered architecture / layer separation:
 - Decoupling & dependency inversion:
 - Bounded contexts & ubiquitous language:
@@ -77,6 +77,11 @@ You can find installation and usage instructions here:
 https://github.com/olbrichattila/godbmigrator_cmd
 
 
+**Database repositories use raw SQL.**
+
+I chose to use raw SQL instead of relying on an ORM. While ORMs are convenient and powerful, in my opinion, for data-critical applications raw SQL (or stored procedures) provides greater control, transparency, and resilience. This approach makes data operations more predictable and easier to optimize, especially when correctness and performance are critical.
+
+
 ## Things to Address: TODO:
 
 - Add transaction support in the API.
@@ -84,6 +89,7 @@ https://github.com/olbrichattila/godbmigrator_cmd
 - Identify and extract duplicated values into shared constants.
 - Use configuration files for database settings instead of hard-coded values.
 - Implement ACID-compliant transactions using a Unit of Work pattern.
+- Specific enum types should be extracted into separate DTOs within the domain layer.
 - Dockerize the application for easier testing (e.g., multi-stage Docker build).
 - Implement login flow and JWT token generation for testing (currently commented out).
 - Apply IDOR protection not only to user resources but to all relevant resource types.
