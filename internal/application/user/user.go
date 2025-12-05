@@ -19,6 +19,10 @@ type userService struct {
 	userRepo userDomain.User
 }
 
+func (u *userService) GetByEmail(email string) (userDomain.UserEntity, error) {
+	return u.userRepo.GetByEmail(email)
+}
+
 func (u *userService) Create(
 	name string,
 	line1 string,

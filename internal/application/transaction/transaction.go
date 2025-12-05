@@ -34,7 +34,12 @@ type transaction struct {
 	accountRepository     accountDomain.Account
 }
 
+func (t *transaction) BelongToUser(accountNumber, transactionId string) (bool, error) {
+	return t.transactionRepository.BelongToUser(accountNumber, transactionId)
+}
+
 func (t *transaction) Create(amount decimal.Decimal, userId, currency, transactionType, accountNumber string, reference *string) error {
+	// TODO split up
 	var correctedAmount decimal.Decimal
 	switch transactionType {
 	case transactionDomain.TransferTypeDeposit:

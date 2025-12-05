@@ -21,6 +21,33 @@ type transaction struct {
 	db *sql.DB
 }
 
+func (a *transaction) BelongToUser(accountNumber, transactionId string) (bool, error) {
+	sql := `SELECT COUNT(*) as cnt
+		FROM transactions t
+		WHERE
+			t.account_number = $1
+			AND id = $2`
+
+	rows, err := a.db.Query(sql, accountNumber, transactionId)
+	if err != nil {
+		return false, fmt.Errorf("cannot verify if transaction belongs to the account %w", err)
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		var accountCount int64
+		err := rows.Scan(&accountCount)
+
+		if err != nil {
+			return false, err
+		}
+
+		return accountCount > 0, nil
+	}
+
+	return false, rows.Err()
+}
+
 func (t *transaction) Create(entity domain.TransactionEntity) error {
 	// TODO this should be in transaction block, as it is critical, if fails, balance should not be updated
 	sql := `INSERT INTO transactions (

@@ -100,7 +100,7 @@ I chose to use raw SQL instead of relying on an ORM. While ORMs are convenient a
 - Implement ACID-compliant transactions using a Unit of Work pattern.
 - Specific enum types should be extracted into separate DTOs within the domain layer.
 - Dockerize the application for easier testing (e.g., multi-stage Docker build).
-- Implement login flow and JWT token generation for testing (currently commented out).
-- Apply IDOR protection not only to user resources but to all relevant resource types.
+- ~~Implement login flow and JWT token generation for testing (currently commented out).~~
+- ~~Apply IDOR protection not only to user resources but to all relevant resource types.~~
 - Add at least a few tests id BDD style with gomock and ginko
 - Linting, makefiles to build, BitBucket pipeline, CI-CD

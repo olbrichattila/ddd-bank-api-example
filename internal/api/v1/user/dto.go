@@ -1,5 +1,9 @@
 package user
 
+type loginRequest struct {
+	Email string `json:"email"`
+}
+
 type createUserRequest struct {
 	Name        string     `json:"name"`
 	Address     addressDTO `json:"address"`

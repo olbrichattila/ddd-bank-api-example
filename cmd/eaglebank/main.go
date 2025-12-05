@@ -25,9 +25,9 @@ func main() {
 
 	defer db.Close()
 
-	router, err := NewRouter(db, cfg)
+	router, err := Bootstrap(db, cfg)
 	if err != nil {
-		fmt.Println("Error creating routes: ", err.Error())
+		fmt.Println("Error bootstrapping application ", err.Error())
 		return
 	}
 

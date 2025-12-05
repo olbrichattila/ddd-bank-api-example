@@ -27,6 +27,10 @@ type account struct {
 	accountRepository accountDomain.Account
 }
 
+func (a *account) BelongToUser(userId, accountNumber string) (bool, error) {
+	return a.accountRepository.BelongToUser(userId, accountNumber)
+}
+
 func (a *account) Create(userID, name string, accountType string) error {
 	accountNumber, err := a.accountRepository.NextAccountNumber()
 	if err != nil {

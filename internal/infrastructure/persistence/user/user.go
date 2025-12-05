@@ -54,12 +54,28 @@ func (u *user) Create(entity domain.UserEntity) (string, error) {
 	return newUserId, nil
 }
 
+func (u *user) GetByEmail(email string) (domain.UserEntity, error) {
+	return u.getByIdOrEmail(false, email)
+}
+
 func (u *user) Get(userId string) (domain.UserEntity, error) {
+	return u.getByIdOrEmail(true, userId)
+}
+
+func (u *user) getByIdOrEmail(isId bool, value string) (domain.UserEntity, error) {
 	sql := `SELECT 
 		id, name, line1, line2, line3, town, county, postcode, phone_number, email, created_at, updated_at 
 	FROM
-		users where id = $1`
-	rows, err := u.db.Query(sql, userId)
+		users
+	WHERE`
+
+	if isId {
+		sql += ` id = $1`
+	} else {
+		sql += ` email = $1`
+	}
+
+	rows, err := u.db.Query(sql, value)
 	if err != nil {
 		return nil, fmt.Errorf("query execution error %w", err)
 	}
@@ -100,14 +116,14 @@ func (u *user) Get(userId string) (domain.UserEntity, error) {
 func (u *user) Update(entity domain.UserEntity) error {
 	sql := `UPDATE users 
 	SET name = $1,
-	line1 = $2,
-	line2 = $3,
-	line3 =$4,
-	town = $5,
-	county =$6,
-	postcode =$7,
-	phone_number = $8,
-	email = $9
+		line1 = $2,
+		line2 = $3,
+		line3 =$4,
+		town = $5,
+		county =$6,
+		postcode =$7,
+		phone_number = $8,
+		email = $9
 	WHERE id = $10`
 
 	_, err := u.db.Exec(

@@ -68,7 +68,6 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
-	// LoggedInUserID := r.Context().Value(middleware.UserIDKey)
 	accountNumber := chi.URLParam(r, accountNumberURLParam)
 	if !helpers.IsValidAccountNumber(accountNumber) {
 		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
@@ -77,6 +76,7 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 
 	transactionList, err := h.transactionService.List(accountNumber)
 	if err != nil {
+		fmt.Println(err)
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}

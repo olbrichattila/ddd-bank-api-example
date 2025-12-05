@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"eaglebank/internal/api/middleware"
 	userService "eaglebank/internal/application/user"
+	"eaglebank/internal/domain/shared/helpers"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -26,6 +28,35 @@ func New(userService userService.User) (*Handler, error) {
 	return &Handler{
 		userService: userService,
 	}, nil
+}
+
+func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
+	// TODO need hashed password, it is only for testing, trying this test API
+	var req loginRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	if !helpers.IsValidEmail(req.Email) {
+		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
+		return
+	}
+
+	userEntity, err := h.userService.GetByEmail(req.Email)
+	if err != nil {
+		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
+		return
+	}
+
+	token, err := helpers.CreateToken(userEntity.ID(), []byte(middleware.SecretKey))
+	if err != nil {
+		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprint(w, token)
 }
 
 func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {

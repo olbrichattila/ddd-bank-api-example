@@ -3,6 +3,7 @@ package account
 import "github.com/shopspring/decimal"
 
 type Account interface {
+	BelongToUser(userId, accountNumber string) (bool, error)
 	Create(entity AccountEntity) error
 	List(userID string) ([]AccountEntity, error)
 	Get(accountNumber string) (AccountEntity, error)

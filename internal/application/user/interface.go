@@ -5,6 +5,7 @@ import (
 )
 
 type User interface {
+	GetByEmail(email string) (userDomain.UserEntity, error)
 	Create(
 		name string,
 		line1 string,
