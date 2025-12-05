@@ -3,7 +3,7 @@ package user
 import "time"
 
 type UserEntity interface {
-	ID() string
+	Id() string
 	Name() string
 	Line1() string
 	Line2() *string

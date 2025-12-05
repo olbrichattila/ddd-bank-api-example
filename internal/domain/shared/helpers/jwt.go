@@ -6,10 +6,10 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func CreateToken(userID string, secretKey []byte) (string, error) {
+func CreateToken(userId string, secretKey []byte) (string, error) {
 	claims := jwt.MapClaims{
-		"id":  userID,
-		"exp": time.Now().Add(time.Hour).Unix(),
+		"id":  userId,
+		"exp": time.Now().Add(6 * time.Hour).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -17,7 +17,7 @@ func CreateToken(userID string, secretKey []byte) (string, error) {
 	return token.SignedString(secretKey)
 }
 
-func GetUserIDFromToken(tokenString string, secretKey []byte) (string, error) {
+func GetUserIdFromToken(tokenString string, secretKey []byte) (string, error) {
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (any, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid

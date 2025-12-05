@@ -25,7 +25,7 @@ type user struct {
 
 func (u *user) Create(entity domain.UserEntity) (string, error) {
 	// optimistic insert /// @TODO this should come outside, does not belong here
-	newUserId, err := helpers.GenerateNewUserID()
+	newUserId, err := helpers.GenerateNewUserId()
 	if err != nil {
 		return "", err
 	}
@@ -137,7 +137,7 @@ func (u *user) Update(entity domain.UserEntity) error {
 		entity.Postcode(),
 		entity.PhoneNumber(),
 		entity.Email(),
-		entity.ID(),
+		entity.Id(),
 	)
 
 	if err != nil {
@@ -147,12 +147,12 @@ func (u *user) Update(entity domain.UserEntity) error {
 	return nil
 }
 
-func (u *user) Delete(userID string) (int64, error) {
+func (u *user) Delete(userId string) (int64, error) {
 	sql := `DELETE FROM users WHERE id = $1`
 
 	result, err := u.db.Exec(
 		sql,
-		userID,
+		userId,
 	)
 
 	if err != nil {

@@ -11,7 +11,7 @@ import (
 
 type Input struct {
 	AccountNumber string
-	UserID        string
+	UserId        string
 	SortCode      string
 	Name          string
 	AccountType   string
@@ -29,7 +29,7 @@ func New(input Input) (AccountEntity, error) {
 
 	return &entity{
 		accountNumber: input.AccountNumber,
-		userID:        input.UserID,
+		userId:        input.UserId,
 		sortCode:      input.SortCode,
 		name:          input.Name,
 		accountType:   input.AccountType,
@@ -42,7 +42,7 @@ func New(input Input) (AccountEntity, error) {
 
 type entity struct {
 	accountNumber string
-	userID        string
+	userId        string
 	sortCode      string
 	name          string
 	accountType   string
@@ -56,8 +56,8 @@ func (e *entity) AccountNumber() string {
 	return e.accountNumber
 }
 
-func (e *entity) UserID() string {
-	return e.userID
+func (e *entity) UserId() string {
+	return e.userId
 }
 
 func (e *entity) AccountType() string {

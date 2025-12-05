@@ -6,9 +6,9 @@ import (
 )
 
 var (
-	userIDValidator        = regexp.MustCompile("^usr-[A-Za-z0-9]+$")
+	userIdValidator        = regexp.MustCompile("^usr-[A-Za-z0-9]+$")
 	accountNumberValidator = regexp.MustCompile(`^01\d{6}$`)
-	transactionIDRegex     = regexp.MustCompile(`^tan-[A-Za-z0-9]+$`)
+	transactionIdRegex     = regexp.MustCompile(`^tan-[A-Za-z0-9]+$`)
 	paymentAmount          = regexp.MustCompile(`^(?:10000|[0-9]{1,4})(?:\.[0-9]{1,2})?$`)
 	emailRegex             = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
 
@@ -17,11 +17,11 @@ var (
 	currencyTypes    = []string{"GBP"}
 )
 
-func IsValidUserID(id string) bool {
+func IsValidUserId(id string) bool {
 	if id == "" {
 		return false
 	}
-	return userIDValidator.MatchString(id)
+	return userIdValidator.MatchString(id)
 }
 
 func IsValidAccountNumber(accountNumber string) bool {
@@ -40,8 +40,8 @@ func IsValidCurrency(currency string) bool {
 	return slices.Contains(currencyTypes, currency)
 }
 
-func IsValidTransactionID(transactionId string) bool {
-	return transactionIDRegex.MatchString(transactionId)
+func IsValidTransactionId(transactionId string) bool {
+	return transactionIdRegex.MatchString(transactionId)
 }
 
 func IsValidPaymentAmount(amountAsStr string) bool {

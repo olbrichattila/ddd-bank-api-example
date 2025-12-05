@@ -31,5 +31,5 @@ type User interface {
 		phoneNumber string,
 		email string,
 	) (userDomain.UserEntity, error)
-	Delete(userID string) (int64, error)
+	Delete(userId string) (int64, error)
 }

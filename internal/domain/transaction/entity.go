@@ -25,11 +25,11 @@ type Input struct {
 }
 
 func New(input Input) (TransactionEntity, error) {
-	if input.Id != "" && !helpers.IsValidTransactionID(input.Id) {
+	if input.Id != "" && !helpers.IsValidTransactionId(input.Id) {
 		return nil, fmt.Errorf("invalid transaction ID")
 	}
 
-	if !helpers.IsValidUserID(input.UserId) {
+	if !helpers.IsValidUserId(input.UserId) {
 		return nil, fmt.Errorf("invalid user ID")
 	}
 

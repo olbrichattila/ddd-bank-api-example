@@ -11,11 +11,11 @@ const (
 	transactionIdLen = 6
 )
 
-func GenerateNewUserID() (string, error) {
+func GenerateNewUserId() (string, error) {
 	// TODO this would be better to be a database SEQUENCE, just for simplicity, like I did for accountNumber
 	randomBytes := make([]byte, 16)
 	if _, err := rand.Read(randomBytes); err != nil {
-		return "", fmt.Errorf("failed to generate random bytes for ID: %w", err)
+		return "", fmt.Errorf("failed to generate random bytes for I: %w", err)
 	}
 
 	suffix := hex.EncodeToString(randomBytes)
@@ -23,7 +23,7 @@ func GenerateNewUserID() (string, error) {
 	return "usr-" + suffix, nil
 }
 
-func GenerateTransactionID() string {
+func GenerateTransactionId() string {
 	// TODO this would be better to be a database SEQUENCE, just for simplicity, like I did for accountNumber
 	alphaNum := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 

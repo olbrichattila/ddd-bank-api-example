@@ -98,6 +98,6 @@ func (u *userService) Update(
 	return u.userRepo.Get(id)
 }
 
-func (u *userService) Delete(userID string) (int64, error) {
-	return u.userRepo.Delete(userID)
+func (u *userService) Delete(userId string) (int64, error) {
+	return u.userRepo.Delete(userId)
 }

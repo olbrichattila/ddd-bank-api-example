@@ -24,7 +24,7 @@ type UserInput struct {
 }
 
 func New(input UserInput) (UserEntity, error) {
-	if input.Id != "" && !helpers.IsValidUserID(input.Id) {
+	if input.Id != "" && !helpers.IsValidUserId(input.Id) {
 		return nil, fmt.Errorf("invalid user id")
 	}
 
@@ -65,7 +65,7 @@ type user struct {
 	updatedAt   time.Time
 }
 
-func (u *user) ID() string           { return u.id }
+func (u *user) Id() string           { return u.id }
 func (u *user) Name() string         { return u.name }
 func (u *user) Line1() string        { return u.line1 }
 func (u *user) Line2() *string       { return u.line2 }

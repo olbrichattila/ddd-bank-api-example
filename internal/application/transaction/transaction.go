@@ -59,7 +59,7 @@ func (t *transaction) Create(amount decimal.Decimal, userId, currency, transacti
 		return fmt.Errorf("Balance cannot be negative")
 	}
 
-	id := helpers.GenerateTransactionID()
+	id := helpers.GenerateTransactionId()
 	entity, err := transactionDomain.New(
 		transactionDomain.Input{
 			Id:            id,

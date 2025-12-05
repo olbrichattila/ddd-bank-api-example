@@ -5,6 +5,7 @@ import (
 	"eaglebank/internal/api/v1/account"
 	"eaglebank/internal/api/v1/transaction"
 	"eaglebank/internal/api/v1/user"
+	configRepository "eaglebank/internal/infrastructure/config"
 )
 
 type Handlers struct {
@@ -13,8 +14,8 @@ type Handlers struct {
 	Transaction *transaction.Handler
 }
 
-func New(services *services.Services) (*Handlers, error) {
-	userHandler, err := user.New(services.User)
+func New(cfg configRepository.Config, services *services.Services) (*Handlers, error) {
+	userHandler, err := user.New(cfg, services.User)
 	if err != nil {
 		return nil, err
 	}

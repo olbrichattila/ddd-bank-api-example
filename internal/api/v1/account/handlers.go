@@ -32,7 +32,7 @@ type Handler struct {
 
 func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	var req createAccountRequest
-	LoggedInUserID := r.Context().Value(middleware.UserIDKey)
+	LoggedInUserId := r.Context().Value(middleware.UserIdKey)
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
@@ -45,7 +45,7 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := h.accountService.Create(LoggedInUserID.(string), req.Name, req.AccountType)
+	err := h.accountService.Create(LoggedInUserId.(string), req.Name, req.AccountType)
 	if err != nil {
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
@@ -55,9 +55,9 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
-	LoggedInUserID := r.Context().Value(middleware.UserIDKey)
+	LoggedInUserId := r.Context().Value(middleware.UserIdKey)
 
-	accountList, err := h.accountService.List(LoggedInUserID.(string))
+	accountList, err := h.accountService.List(LoggedInUserId.(string))
 	if err != nil {
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return

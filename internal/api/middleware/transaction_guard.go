@@ -16,7 +16,7 @@ func TransactionGuard(transactionService transaction.Transaction) func(http.Hand
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			transactionId := chi.URLParam(r, string(transactionIdURLParam))
-			if !helpers.IsValidTransactionID(transactionId) {
+			if !helpers.IsValidTransactionId(transactionId) {
 				http.Error(w, "The request didn't supply all the necessary data", http.StatusBadRequest)
 				return
 			}

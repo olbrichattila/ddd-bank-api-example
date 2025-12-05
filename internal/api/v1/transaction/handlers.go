@@ -33,7 +33,7 @@ type Handler struct {
 }
 
 func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
-	LoggedInUserID := r.Context().Value(middleware.UserIDKey)
+	LoggedInUserId := r.Context().Value(middleware.UserIdKey)
 	accountNumber := chi.URLParam(r, accountNumberURLParam)
 	if !helpers.IsValidAccountNumber(accountNumber) {
 		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
@@ -58,7 +58,7 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.transactionService.Create(decimalAmount, LoggedInUserID.(string), req.Currency, req.Type, accountNumber, &req.Reference)
+	err = h.transactionService.Create(decimalAmount, LoggedInUserId.(string), req.Currency, req.Type, accountNumber, &req.Reference)
 	if err != nil {
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
@@ -92,7 +92,7 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	transactionNumber := chi.URLParam(r, transactionNumberURLParam)
-	if !helpers.IsValidTransactionID(transactionNumber) {
+	if !helpers.IsValidTransactionId(transactionNumber) {
 		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
 		return
 	}

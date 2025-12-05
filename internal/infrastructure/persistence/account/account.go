@@ -92,7 +92,7 @@ func (a *account) Create(entity domain.AccountEntity) error {
 	_, err := a.db.Exec(
 		sql,
 		entity.AccountNumber(),
-		entity.UserID(),
+		entity.UserId(),
 		entity.SortCode(),
 		entity.Name(),
 		entity.AccountType(),
@@ -145,7 +145,7 @@ func (a *account) Get(accountNumber string) (domain.AccountEntity, error) {
 		var input domain.Input
 		err := rows.Scan(
 			&input.AccountNumber,
-			&input.UserID,
+			&input.UserId,
 			&input.SortCode,
 			&input.Name,
 			&input.AccountType,
@@ -169,7 +169,7 @@ func (a *account) Get(accountNumber string) (domain.AccountEntity, error) {
 	return nil, nil
 }
 
-func (a *account) List(userID string) ([]domain.AccountEntity, error) {
+func (a *account) List(userId string) ([]domain.AccountEntity, error) {
 	var accountEntities []domain.AccountEntity
 	sql := `SELECT 
 		account_number,
@@ -183,7 +183,7 @@ func (a *account) List(userID string) ([]domain.AccountEntity, error) {
 		updated_at 
 	FROM
 		accounts where user_id = $1`
-	rows, err := a.db.Query(sql, userID)
+	rows, err := a.db.Query(sql, userId)
 	if err != nil {
 		return nil, fmt.Errorf("query execution error %w", err)
 	}
@@ -193,7 +193,7 @@ func (a *account) List(userID string) ([]domain.AccountEntity, error) {
 		var input domain.Input
 		err := rows.Scan(
 			&input.AccountNumber,
-			&input.UserID,
+			&input.UserId,
 			&input.SortCode,
 			&input.Name,
 			&input.AccountType,

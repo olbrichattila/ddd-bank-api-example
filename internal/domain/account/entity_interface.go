@@ -8,7 +8,7 @@ import (
 
 type AccountEntity interface {
 	AccountNumber() string
-	UserID() string
+	UserId() string
 	SortCode() string
 	Name() string
 	AccountType() string

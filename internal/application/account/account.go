@@ -31,7 +31,7 @@ func (a *account) BelongToUser(userId, accountNumber string) (bool, error) {
 	return a.accountRepository.BelongToUser(userId, accountNumber)
 }
 
-func (a *account) Create(userID, name string, accountType string) error {
+func (a *account) Create(userId, name string, accountType string) error {
 	accountNumber, err := a.accountRepository.NextAccountNumber()
 	if err != nil {
 		return fmt.Errorf("account number creation error: %w", err)
@@ -40,7 +40,7 @@ func (a *account) Create(userID, name string, accountType string) error {
 	accountEntity, err := accountDomain.New(
 		accountDomain.Input{
 			AccountNumber: accountNumber,
-			UserID:        userID,
+			UserId:        userId,
 			SortCode:      eagleSortCode,
 			Name:          name,
 			AccountType:   accountType,
@@ -56,8 +56,8 @@ func (a *account) Create(userID, name string, accountType string) error {
 	return a.accountRepository.Create(accountEntity)
 }
 
-func (a *account) List(userID string) ([]accountDomain.AccountEntity, error) {
-	return a.accountRepository.List(userID)
+func (a *account) List(userId string) ([]accountDomain.AccountEntity, error) {
+	return a.accountRepository.List(userId)
 }
 
 func (a *account) Get(accountNumber string) (accountDomain.AccountEntity, error) {

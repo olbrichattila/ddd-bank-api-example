@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"eaglebank/internal/api/middleware"
 	userService "eaglebank/internal/application/user"
 	"eaglebank/internal/domain/shared/helpers"
+	configRepository "eaglebank/internal/infrastructure/config"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -18,15 +18,21 @@ const (
 
 type Handler struct {
 	userService userService.User
+	cfg         configRepository.Config
 }
 
-func New(userService userService.User) (*Handler, error) {
+func New(cfg configRepository.Config, userService userService.User) (*Handler, error) {
+	if cfg == nil {
+		return nil, fmt.Errorf("user handler requires config repository, nil provided")
+	}
+
 	if userService == nil {
 		return nil, fmt.Errorf("user handler requires user repository, nil provided")
 	}
 
 	return &Handler{
 		userService: userService,
+		cfg:         cfg,
 	}, nil
 }
 
@@ -50,7 +56,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := helpers.CreateToken(userEntity.ID(), []byte(middleware.SecretKey))
+	token, err := helpers.CreateToken(userEntity.Id(), []byte(h.cfg.GetJWTSecret()))
 	if err != nil {
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
@@ -93,8 +99,8 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
-	userID := chi.URLParam(r, urlParamName)
-	userEntity, err := h.userService.Get(userID)
+	userId := chi.URLParam(r, urlParamName)
+	userEntity, err := h.userService.Get(userId)
 	if err != nil {
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
@@ -115,7 +121,7 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
-	userID := chi.URLParam(r, urlParamName)
+	userId := chi.URLParam(r, urlParamName)
 
 	var req createUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -130,7 +136,7 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	updatedUserEntity, err := h.userService.Update(
-		userID,
+		userId,
 		req.Name,
 		req.Address.Line1,
 		req.Address.Line2,
@@ -156,9 +162,9 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
-	userID := chi.URLParam(r, urlParamName)
+	userId := chi.URLParam(r, urlParamName)
 
-	affectedRows, err := h.userService.Delete(userID)
+	affectedRows, err := h.userService.Delete(userId)
 	if err != nil {
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return

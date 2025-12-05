@@ -5,5 +5,5 @@ type User interface {
 	Get(userId string) (UserEntity, error)
 	GetByEmail(email string) (UserEntity, error)
 	Update(entity UserEntity) error
-	Delete(userID string) (int64, error)
+	Delete(userId string) (int64, error)
 }

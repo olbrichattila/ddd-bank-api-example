@@ -9,7 +9,7 @@ import (
 
 func (h *Handler) outboundMappingTranslator(userEntity userDomain.UserEntity) ([]byte, error) {
 	response := createUserResponse{
-		Id:   userEntity.ID(),
+		Id:   userEntity.Id(),
 		Name: userEntity.Name(),
 		Address: addressDTO{
 			Line1:    userEntity.Line1(),

@@ -10,8 +10,7 @@ import (
 type contextKey string
 
 const (
-	UserIDKey contextKey = "userId"
-	SecretKey string     = "your-secret-key" // TODO move it to config
+	UserIdKey contextKey = "userId"
 )
 
 func JWT(secret string) func(http.Handler) http.Handler {
@@ -26,15 +25,13 @@ func JWT(secret string) func(http.Handler) http.Handler {
 
 			tokenStr := strings.TrimPrefix(auth, "Bearer ")
 
-			userID, err := helpers.GetUserIDFromToken(tokenStr, []byte(SecretKey))
+			userId, err := helpers.GetUserIdFromToken(tokenStr, []byte(secret))
 			if err != nil {
 				http.Error(w, "Invalid token", http.StatusUnauthorized)
 				return
 			}
 
-			// userID := "usr-d187b52cf4ee97e05e65a7ebd4fd7ef7"
-
-			ctx := context.WithValue(r.Context(), UserIDKey, userID)
+			ctx := context.WithValue(r.Context(), UserIdKey, userId)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}

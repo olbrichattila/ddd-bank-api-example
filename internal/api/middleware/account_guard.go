@@ -21,13 +21,13 @@ func AccountGuard(accountService account.Account) func(http.Handler) http.Handle
 				return
 			}
 
-			loggedInUserID := r.Context().Value(UserIDKey)
-			if loggedInUserID == nil {
+			loggedInUserId := r.Context().Value(UserIdKey)
+			if loggedInUserId == nil {
 				http.Error(w, "The request didn't supply all the necessary data", http.StatusBadRequest)
 				return
 			}
 
-			ok, err := accountService.BelongToUser(loggedInUserID.(string), accountNumber)
+			ok, err := accountService.BelongToUser(loggedInUserId.(string), accountNumber)
 			if err != nil {
 				http.Error(w, "unexpected error occurred", http.StatusInternalServerError)
 				return
