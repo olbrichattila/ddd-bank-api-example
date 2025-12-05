@@ -125,7 +125,6 @@ func (u *user) Update(entity domain.UserEntity) error {
 	)
 
 	if err != nil {
-		fmt.Println(err.Error())
 		return fmt.Errorf("user repository, error updating user: %w", err)
 	}
 
@@ -141,7 +140,6 @@ func (u *user) Delete(userID string) (int64, error) {
 	)
 
 	if err != nil {
-		fmt.Println(err.Error())
 		return 0, fmt.Errorf("user repository, error deleting user: %w", err)
 	}
 

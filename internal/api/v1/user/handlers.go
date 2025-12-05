@@ -58,8 +58,6 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(userID)
-
 	w.WriteHeader(http.StatusCreated)
 }
 

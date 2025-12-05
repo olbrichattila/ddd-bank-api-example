@@ -92,6 +92,6 @@ func (t *transaction) willBalanceBeNegative(accountNumber string, correctedAmoun
 		return false, err
 	}
 
-	newBalance := accountEntity.Balance().Sub(correctedAmount)
+	newBalance := accountEntity.Balance().Add(correctedAmount)
 	return newBalance.IsNegative(), nil
 }

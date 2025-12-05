@@ -13,10 +13,12 @@ var (
 	userIDValidator        = regexp.MustCompile("^usr-[A-Za-z0-9]+$")
 	accountNumberValidator = regexp.MustCompile(`^01\d{6}$`)
 	transactionIDRegex     = regexp.MustCompile(`^tan-[A-Za-z0-9]$`)
-	accountTypes           = []string{"personal", "business", "savings", "corporate"}
-	transactionTypes       = []string{"deposit", "withdrawal"}
-	currencyTypes          = []string{"GBP"}
-	transactionIdLen       = 6
+	paymentAmount          = regexp.MustCompile(`^(?:10000|[0-9]{1,4})(?:\.[0-9]{1,2})?$`)
+
+	accountTypes     = []string{"personal", "business", "savings", "corporate"}
+	transactionTypes = []string{"deposit", "withdrawal"}
+	currencyTypes    = []string{"GBP"}
+	transactionIdLen = 6
 )
 
 func GenerateNewUserID() (string, error) {
@@ -67,4 +69,8 @@ func IsValidCurrency(currency string) bool {
 
 func IsValidTransactionID(t string) bool {
 	return transactionIDRegex.MatchString(t)
+}
+
+func IsValidPaymentAmount(amountAsStr string) bool {
+	return paymentAmount.MatchString(amountAsStr)
 }

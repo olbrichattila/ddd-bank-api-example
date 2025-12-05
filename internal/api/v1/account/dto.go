@@ -1,9 +1,5 @@
 package account
 
-type patchAccountRequest struct {
-	AccountNumber string `json:"accountNumber"`
-}
-
 type createAccountRequest struct {
 	Name        string `json:"name"`
 	AccountType string `json:"accountType"`

@@ -88,7 +88,6 @@ func (a *account) Delete(accountNumber string) (int64, error) {
 	)
 
 	if err != nil {
-		fmt.Println(err.Error())
 		return 0, fmt.Errorf("user repository, error deleting user: %w", err)
 	}
 
@@ -210,7 +209,6 @@ func (a *account) Update(entity domain.AccountEntity) error {
 	)
 
 	if err != nil {
-		fmt.Println(err.Error())
 		return fmt.Errorf("account repository, error updating account: %w", err)
 	}
 
@@ -232,7 +230,6 @@ func (a *account) UpdateBalance(accountNumber string, amount decimal.Decimal) er
 	)
 
 	if err != nil {
-		fmt.Println(err.Error())
 		return fmt.Errorf("account repository, error updating balance: %w", err)
 	}
 

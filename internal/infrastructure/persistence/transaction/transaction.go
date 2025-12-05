@@ -25,7 +25,7 @@ func (t *transaction) Create(entity domain.TransactionEntity) error {
 	// TODO this should be in transaction block, as it is critical, if fails, balance should not be updated
 	sql := `INSERT INTO transactions (
 		id, account_number, user_id, amount, currency, type, reference
-	) VALUES ($1, $2, $3, $4, $5, $6)`
+	) VALUES ($1, $2, $3, $4, $5, $6, $7)`
 
 	_, err := t.db.Exec(
 		sql,

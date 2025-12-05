@@ -65,9 +65,9 @@ func NewRouter(db *sql.DB, cfg configRepository.Config) (*chi.Mux, error) {
 		})
 
 		// Transaction routes
-		auth.Post(routeVersionDecorator("accounts/{accountNumber}/transactions"), httpHandlers.Account.Create)
-		auth.Get(routeVersionDecorator("accounts/{accountNumber}/transactions"), httpHandlers.Account.List)
-		auth.Get(routeVersionDecorator("accounts/{accountNumber}/transactions/{transactionId}"), httpHandlers.Account.Get)
+		auth.Post(routeVersionDecorator("accounts/{accountNumber}/transactions"), httpHandlers.Transaction.Create)
+		auth.Get(routeVersionDecorator("accounts/{accountNumber}/transactions"), httpHandlers.Transaction.List)
+		auth.Get(routeVersionDecorator("accounts/{accountNumber}/transactions/{transactionNumber}"), httpHandlers.Transaction.Get)
 	})
 
 	return r, nil
