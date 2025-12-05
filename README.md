@@ -1,5 +1,14 @@
 # Banking API example
 
+> Note this is still work in progress, working on
+- ACID transaction consistency
+- Variable naming consistency, review
+- Few example BDD tests
+- Dockerize
+- Error handling refinement
+- JWT Token auth and IDOR resource protection only exists for users at this stage.
+
+
 This code represents a sample banking API for an imaginary bank.
 
 The solution is implemented in Go using a Domain-Driven Design (DDD) approach.

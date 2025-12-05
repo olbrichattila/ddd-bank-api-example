@@ -42,7 +42,7 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID, err := h.userService.Create(
+	_, err := h.userService.Create(
 		req.Name,
 		req.Address.Line1,
 		req.Address.Line2,
