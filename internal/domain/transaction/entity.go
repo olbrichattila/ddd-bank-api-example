@@ -1,11 +1,12 @@
 package transaction
 
 import (
-	"eaglebank/internal/domain/shared/helpers"
 	"fmt"
 	"time"
 
 	"github.com/shopspring/decimal"
+
+	"eaglebank/internal/domain/shared/helpers"
 )
 
 const (
@@ -26,11 +27,11 @@ type Input struct {
 
 func New(input Input) (TransactionEntity, error) {
 	if input.Id != "" && !helpers.IsValidTransactionId(input.Id) {
-		return nil, fmt.Errorf("invalid transaction ID")
+		return nil, fmt.Errorf("invalid transaction Id")
 	}
 
 	if !helpers.IsValidUserId(input.UserId) {
-		return nil, fmt.Errorf("invalid user ID")
+		return nil, fmt.Errorf("invalid user Id")
 	}
 
 	if !helpers.IsValidAccountNumber(input.AccountNumber) {

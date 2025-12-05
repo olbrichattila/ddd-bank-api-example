@@ -2,8 +2,9 @@
 package user
 
 import (
-	userDomain "eaglebank/internal/domain/user"
 	"fmt"
+
+	userDomain "eaglebank/internal/domain/user"
 )
 
 func New(userRepo userDomain.User) (User, error) {

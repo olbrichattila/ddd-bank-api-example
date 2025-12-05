@@ -1,9 +1,9 @@
 package transaction
 
 import (
-	domain "eaglebank/internal/domain/transaction"
-
 	"github.com/shopspring/decimal"
+
+	domain "eaglebank/internal/domain/transaction"
 )
 
 type Transaction interface {

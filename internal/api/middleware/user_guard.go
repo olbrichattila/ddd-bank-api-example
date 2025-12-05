@@ -1,10 +1,11 @@
 package middleware
 
 import (
-	"eaglebank/internal/domain/shared/helpers"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+
+	"eaglebank/internal/domain/shared/helpers"
 )
 
 func UserGuard() func(http.Handler) http.Handler {

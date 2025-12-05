@@ -2,9 +2,10 @@ package middleware
 
 import (
 	"context"
-	"eaglebank/internal/domain/shared/helpers"
 	"net/http"
 	"strings"
+
+	"eaglebank/internal/domain/shared/helpers"
 )
 
 type contextKey string

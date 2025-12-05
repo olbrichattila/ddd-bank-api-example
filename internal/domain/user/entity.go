@@ -2,10 +2,11 @@
 package user
 
 import (
-	"eaglebank/internal/domain/shared/helpers"
 	"fmt"
 	"strings"
 	"time"
+
+	"eaglebank/internal/domain/shared/helpers"
 )
 
 type UserInput struct {

@@ -1,11 +1,12 @@
 package middleware
 
 import (
-	"eaglebank/internal/application/transaction"
-	"eaglebank/internal/domain/shared/helpers"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+
+	"eaglebank/internal/application/transaction"
+	"eaglebank/internal/domain/shared/helpers"
 )
 
 const (
