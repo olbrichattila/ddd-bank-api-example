@@ -84,7 +84,7 @@ I chose to use raw SQL instead of relying on an ORM. While ORMs are convenient a
 
 ## Things to Address: TODO:
 
-- Add transaction support in the API.
+- ~~Add transaction support in the API.~~
 - Review and unify naming to improve consistency across the project.
 - Identify and extract duplicated values into shared constants.
 - Use configuration files for database settings instead of hard-coded values.
