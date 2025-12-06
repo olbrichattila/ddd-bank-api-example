@@ -83,7 +83,12 @@ func (a *account) Update(accountNumber string, name string, accountType string) 
 		return nil, err
 	}
 
-	err = accountEntity.SetAccountType(accountType)
+	accountTypeVo, err := accountDomain.NewAccountType(accountType)
+	if err != nil {
+		return nil, err
+	}
+
+	err = accountEntity.SetAccountType(accountTypeVo)
 	if err != nil {
 		return nil, err
 	}

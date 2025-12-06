@@ -1,6 +1,6 @@
 package transaction
 
-import "eaglebank/internal/domain/shared/helpers"
+import "eaglebank/internal/shared/helpers"
 
 func (h *Handler) validateRequest(req request) bool {
 	if !helpers.IsValidCurrency(req.Currency) ||

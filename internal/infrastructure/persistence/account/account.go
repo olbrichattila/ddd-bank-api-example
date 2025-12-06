@@ -78,13 +78,13 @@ func (a *account) Create(entity domain.AccountEntity) error {
 	_, err := database.ExecuteSQL(
 		a.db,
 		sql,
-		entity.AccountNumber(),
-		entity.UserId(),
+		entity.AccountNumber().AsString(),
+		entity.UserId().AsString(),
 		entity.SortCode(),
 		entity.Name(),
-		entity.AccountType(),
+		entity.AccountType().AsString(),
 		entity.Balance().String(),
-		entity.Currency(),
+		entity.Currency().AsString(),
 	)
 
 	if err != nil {
@@ -207,8 +207,8 @@ func (a *account) Update(entity domain.AccountEntity) error {
 		a.db,
 		sql,
 		entity.Name(),
-		entity.AccountType(),
-		entity.AccountNumber(),
+		entity.AccountType().AsString(),
+		entity.AccountNumber().AsString(),
 	)
 
 	if err != nil {

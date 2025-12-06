@@ -7,7 +7,7 @@ type loginRequest struct {
 type createUserRequest struct {
 	Name        string     `json:"name"`
 	Address     addressDTO `json:"address"`
-	PhoneNumber string     `json:"phone_number"`
+	PhoneNumber string     `json:"phoneNumber"`
 	Email       string     `json:"email"`
 }
 
@@ -15,7 +15,7 @@ type createUserResponse struct {
 	Id               string     `json:"id"`
 	Name             string     `json:"name"`
 	Address          addressDTO `json:"address"`
-	PhoneNumber      string     `json:"phone_number"`
+	PhoneNumber      string     `json:"phoneNumber"`
 	Email            string     `json:"email"`
 	CreatedTimestamp string     `json:"createdTimestamp"`
 	UpdatedTimestamp string     `json:"updatedTimestamp"`

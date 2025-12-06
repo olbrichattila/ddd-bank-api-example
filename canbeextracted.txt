@@ -1,0 +1,19 @@
+// Account
+
+AccountNumber
+AccountType
+
+// Transaction
+Id (transactionId)
+Type
+
+// User
+PhoneNumber
+Email
+
+// Generic
+UserId
+Currency
+
+
+

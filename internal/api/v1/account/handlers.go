@@ -7,7 +7,8 @@ import (
 
 	"eaglebank/internal/api/middleware"
 	"eaglebank/internal/application/account"
-	"eaglebank/internal/domain/shared/helpers"
+	"eaglebank/internal/shared/helpers"
+	"eaglebank/internal/shared/services"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -16,18 +17,24 @@ const (
 	urlParamName = "accountNumber"
 )
 
-func New(userService account.Account) (*Handler, error) {
+type Handler struct {
+	accountService account.Account
+	logger         services.Logger
+}
+
+func New(logger services.Logger, userService account.Account) (*Handler, error) {
 	if userService == nil {
 		return nil, fmt.Errorf("user service nil when creating user handler")
 	}
 
+	if logger == nil {
+		return nil, fmt.Errorf("user handler requires logger, nil provided")
+	}
+
 	return &Handler{
 		accountService: userService,
+		logger:         logger,
 	}, nil
-}
-
-type Handler struct {
-	accountService account.Account
 }
 
 func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
@@ -35,6 +42,7 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	LoggedInUserId := r.Context().Value(middleware.UserIdKey)
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
 		return
 	}
@@ -47,6 +55,7 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	err := h.accountService.Create(LoggedInUserId.(string), req.Name, req.AccountType)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
@@ -59,12 +68,14 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 
 	accountList, err := h.accountService.List(LoggedInUserId.(string))
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
 
 	responseJSON, err := h.outboundMappingListTranslator(accountList)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "User was not found", http.StatusInternalServerError)
 		return
 	}
@@ -81,6 +92,7 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 
 	accountEntity, err := h.accountService.Get(accountNumber)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
@@ -93,6 +105,7 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	accountResponse := h.outboundMappingTranslator(accountEntity)
 	accountAsJSON, err := json.Marshal(accountResponse)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
@@ -109,6 +122,7 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 
 	var req createAccountRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
 		return
 	}
@@ -121,6 +135,7 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 
 	modifiedAccountEntity, err := h.accountService.Update(accountNumber, req.Name, req.AccountType)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
@@ -133,6 +148,7 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 	accountResponse := h.outboundMappingTranslator(modifiedAccountEntity)
 	accountAsJSON, err := json.Marshal(accountResponse)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
@@ -149,6 +165,7 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 
 	affectedRows, err := h.accountService.Delete(accountNumber)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}

@@ -1,9 +1,12 @@
 package user
 
-import "time"
+import (
+	"eaglebank/internal/domain/valueobjects"
+	"time"
+)
 
 type UserEntity interface {
-	Id() string
+	Id() valueobjects.UserId
 	Name() string
 	Line1() string
 	Line2() *string
@@ -11,8 +14,8 @@ type UserEntity interface {
 	Town() string
 	County() string
 	Postcode() string
-	PhoneNumber() string
-	Email() string
+	PhoneNumber() Phone
+	Email() Email
 	CreatedAt() time.Time
 	UpdatedAt() time.Time
 }

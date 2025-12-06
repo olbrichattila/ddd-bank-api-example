@@ -7,12 +7,15 @@ import (
 	"eaglebank/internal/application/account"
 	"eaglebank/internal/application/transaction"
 	"eaglebank/internal/application/user"
+	"eaglebank/internal/shared/services"
+	serviceImplementations "eaglebank/internal/shared/services/implementation"
 )
 
 type Services struct {
 	User        user.User
 	Account     account.Account
 	Transaction transaction.Transaction
+	Logger      services.Logger
 }
 
 func New(repositories *repositories.Repositories) (*Services, error) {
@@ -31,9 +34,12 @@ func New(repositories *repositories.Repositories) (*Services, error) {
 		return nil, fmt.Errorf("Cannot create account service")
 	}
 
+	logger := serviceImplementations.NewScreenLogger()
+
 	return &Services{
 		User:        userService,
 		Account:     accountService,
 		Transaction: transactionService,
+		Logger:      logger,
 	}, nil
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"eaglebank/internal/domain/shared/helpers"
+	"eaglebank/internal/domain/valueobjects"
 
 	"github.com/shopspring/decimal"
 )
@@ -22,45 +22,60 @@ type Input struct {
 }
 
 func New(input Input) (AccountEntity, error) {
-	// Domain level validation
-	if !helpers.IsValidAccountNumber(input.AccountNumber) {
-		return nil, fmt.Errorf("invalid account number format")
+	accountNumber, err := NewAccountNumber(input.AccountNumber)
+	if err != nil {
+		return nil, fmt.Errorf("creating account, invalid account number %w", err)
+	}
+
+	userId, err := valueobjects.NewUserId(input.UserId)
+	if err != nil {
+		return nil, fmt.Errorf("creating account, invalid user id number %w", err)
+	}
+
+	accountType, err := NewAccountType(input.AccountType)
+	if err != nil {
+		return nil, fmt.Errorf("creating account, invalid account type %w", err)
+	}
+
+	currency, err := NewCurrency(input.Currency)
+	if err != nil {
+		return nil, fmt.Errorf("creating account, invalid currency %w", err)
 	}
 
 	return &entity{
-		accountNumber: input.AccountNumber,
-		userId:        input.UserId,
+		accountNumber: accountNumber,
+		userId:        userId,
 		sortCode:      input.SortCode,
 		name:          input.Name,
-		accountType:   input.AccountType,
+		accountType:   accountType,
 		balance:       input.Balance,
-		currency:      input.Currency,
+		currency:      currency,
 		createdAt:     input.CreatedAt,
 		updatedAt:     input.UpdatedAt,
 	}, nil
 }
 
 type entity struct {
-	accountNumber string
-	userId        string
+	accountNumber AccountNumber
+	userId        valueobjects.UserId
 	sortCode      string
 	name          string
-	accountType   string
+	accountType   AccountType
 	balance       decimal.Decimal
-	currency      string
+	currency      Currency
 	createdAt     time.Time
 	updatedAt     time.Time
 }
 
-func (e *entity) AccountNumber() string {
+func (e *entity) AccountNumber() AccountNumber {
 	return e.accountNumber
 }
 
-func (e *entity) UserId() string {
+func (e *entity) UserId() valueobjects.UserId {
 	return e.userId
 }
 
-func (e *entity) AccountType() string {
+func (e *entity) AccountType() AccountType {
 	return e.accountType
 }
 
@@ -68,7 +83,7 @@ func (e *entity) Balance() decimal.Decimal {
 	return e.balance
 }
 
-func (e *entity) Currency() string {
+func (e *entity) Currency() Currency {
 	return e.currency
 }
 
@@ -89,12 +104,7 @@ func (e *entity) UpdatedAt() time.Time {
 }
 
 // Setters
-
-func (e *entity) SetAccountType(accountType string) error {
-	if !helpers.IsValidAccountType(accountType) {
-		return fmt.Errorf("invalid account type")
-	}
-
+func (e *entity) SetAccountType(accountType AccountType) error {
 	e.accountType = accountType
 
 	return nil

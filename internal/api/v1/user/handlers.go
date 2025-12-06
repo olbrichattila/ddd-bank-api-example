@@ -6,8 +6,9 @@ import (
 	"net/http"
 
 	userService "eaglebank/internal/application/user"
-	"eaglebank/internal/domain/shared/helpers"
 	configRepository "eaglebank/internal/infrastructure/config"
+	"eaglebank/internal/shared/helpers"
+	"eaglebank/internal/shared/services"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -18,10 +19,11 @@ const (
 
 type Handler struct {
 	userService userService.User
+	logger      services.Logger
 	cfg         configRepository.Config
 }
 
-func New(cfg configRepository.Config, userService userService.User) (*Handler, error) {
+func New(cfg configRepository.Config, logger services.Logger, userService userService.User) (*Handler, error) {
 	if cfg == nil {
 		return nil, fmt.Errorf("user handler requires config repository, nil provided")
 	}
@@ -30,9 +32,14 @@ func New(cfg configRepository.Config, userService userService.User) (*Handler, e
 		return nil, fmt.Errorf("user handler requires user repository, nil provided")
 	}
 
+	if logger == nil {
+		return nil, fmt.Errorf("user handler requires logger, nil provided")
+	}
+
 	return &Handler{
 		userService: userService,
 		cfg:         cfg,
+		logger:      logger,
 	}, nil
 }
 
@@ -40,6 +47,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	// TODO need hashed password, it is only for testing, trying this test API
 	var req loginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
 		return
 	}
@@ -52,12 +60,19 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	userEntity, err := h.userService.GetByEmail(req.Email)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
 
-	token, err := helpers.CreateToken(userEntity.Id(), []byte(h.cfg.GetJWTSecret()))
+	if userEntity == nil {
+		http.Error(w, "unathorized", http.StatusUnauthorized)
+		return
+	}
+
+	token, err := helpers.CreateToken(userEntity.Id().AsString(), []byte(h.cfg.GetJWTSecret()))
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
@@ -68,6 +83,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	var req createUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
 		return
 	}
@@ -91,6 +107,7 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 		req.Email,
 	)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
@@ -102,6 +119,7 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	userId := chi.URLParam(r, urlParamName)
 	userEntity, err := h.userService.Get(userId)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
@@ -113,6 +131,7 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 
 	responseJSON, err := h.outboundMappingTranslator(userEntity)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "User was not found", http.StatusInternalServerError)
 		return
 	}
@@ -125,6 +144,7 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 
 	var req createUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
 		return
 	}
@@ -148,12 +168,14 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 		req.Email,
 	)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
 
 	responseJSON, err := h.outboundMappingTranslator(updatedUserEntity)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "User was not found", http.StatusInternalServerError)
 		return
 	}
@@ -166,6 +188,7 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 
 	affectedRows, err := h.userService.Delete(userId)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}

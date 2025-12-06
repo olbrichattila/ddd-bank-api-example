@@ -15,17 +15,17 @@ type Handlers struct {
 }
 
 func New(cfg configRepository.Config, services *services.Services) (*Handlers, error) {
-	userHandler, err := user.New(cfg, services.User)
+	userHandler, err := user.New(cfg, services.Logger, services.User)
 	if err != nil {
 		return nil, err
 	}
 
-	accountHandler, err := account.New(services.Account)
+	accountHandler, err := account.New(services.Logger, services.Account)
 	if err != nil {
 		return nil, err
 	}
 
-	transactionHandler, err := transaction.New(services.Transaction)
+	transactionHandler, err := transaction.New(services.Logger, services.Transaction)
 	if err != nil {
 		return nil, err
 	}

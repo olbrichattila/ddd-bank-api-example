@@ -1,23 +1,24 @@
 package account
 
 import (
+	"eaglebank/internal/domain/valueobjects"
 	"time"
 
 	"github.com/shopspring/decimal"
 )
 
 type AccountEntity interface {
-	AccountNumber() string
-	UserId() string
+	AccountNumber() AccountNumber
+	UserId() valueobjects.UserId
 	SortCode() string
 	Name() string
-	AccountType() string
+	AccountType() AccountType
 	Balance() decimal.Decimal
-	Currency() string
+	Currency() Currency
 	CreatedAt() time.Time
 	UpdatedAt() time.Time
 
 	// Setters
 	SetName(name string) error
-	SetAccountType(accountType string) error
+	SetAccountType(accountType AccountType) error
 }

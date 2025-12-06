@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"eaglebank/internal/application/account"
-	"eaglebank/internal/domain/shared/helpers"
+	"eaglebank/internal/shared/helpers"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"

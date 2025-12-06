@@ -33,7 +33,7 @@ func New(
 
 		// User routes
 		auth.Group(func(auth chi.Router) {
-			auth.Use(middleware.UserGuard())
+			auth.Use(middleware.UserGuard(services.Logger))
 			auth.Get(routeVersionDecorator("users/{userId}"), httpHandlers.User.Get)
 			auth.Patch(routeVersionDecorator("users/{userId}"), httpHandlers.User.Update)
 			auth.Delete(routeVersionDecorator("users/{userId}"), httpHandlers.User.Delete)

@@ -11,6 +11,7 @@ var (
 	transactionIdRegex     = regexp.MustCompile(`^tan-[A-Za-z0-9]+$`)
 	paymentAmount          = regexp.MustCompile(`^(?:10000|[0-9]{1,4})(?:\.[0-9]{1,2})?$`)
 	emailRegex             = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
+	phoneRegex             = regexp.MustCompile(`^\+[1-9]\d{1,14}$`)
 
 	accountTypes     = []string{"personal", "business", "savings", "corporate"}
 	transactionTypes = []string{"deposit", "withdrawal"}
@@ -50,4 +51,8 @@ func IsValidPaymentAmount(amountAsStr string) bool {
 
 func IsValidEmail(email string) bool {
 	return emailRegex.MatchString(email)
+}
+
+func IsValidPhone(phoneNumber string) bool {
+	return phoneRegex.MatchString(phoneNumber)
 }

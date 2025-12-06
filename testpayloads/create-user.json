@@ -1,0 +1,13 @@
+{
+  "name": "John Doe",
+  "address": {
+    "line1": "123 Main Street",
+    "line2": "Flat 4B",
+    "line3": "",
+    "town": "London",
+    "county": "Greater London",
+    "postcode": "SW1A 1AA"
+  },
+  "phoneNumber": "+447911123456",
+  "email": "john.doe@example.com"
+}

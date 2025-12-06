@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"eaglebank/internal/domain/shared/helpers"
+	"eaglebank/internal/domain/valueobjects"
 )
 
 type UserInput struct {
@@ -25,18 +25,27 @@ type UserInput struct {
 }
 
 func New(input UserInput) (UserEntity, error) {
-	if input.Id != "" && !helpers.IsValidUserId(input.Id) {
-		return nil, fmt.Errorf("invalid user id")
+	userId, err := valueobjects.NewUserId(input.Id)
+	if err != nil {
+		return nil, err
 	}
 
 	if strings.TrimSpace(input.Name) == "" {
 		return nil, fmt.Errorf("name is required")
 	}
 
-	// TODO add further domain level validation rules
+	email, err := NewEmail(input.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	phone, err := NewPhoneNumber(input.PhoneNumber)
+	if err != nil {
+		return nil, err
+	}
 
 	return &user{
-		id:          input.Id,
+		id:          userId,
 		name:        input.Name,
 		line1:       input.Line1,
 		line2:       input.Line2,
@@ -44,15 +53,15 @@ func New(input UserInput) (UserEntity, error) {
 		town:        input.Town,
 		county:      input.County,
 		postcode:    input.Postcode,
-		phoneNumber: input.PhoneNumber,
-		email:       input.Email,
+		phoneNumber: Phone(phone),
+		email:       email,
 		createdAt:   input.CreatedAt,
 		updatedAt:   input.UpdatedAt,
 	}, nil
 }
 
 type user struct {
-	id          string
+	id          valueobjects.UserId
 	name        string
 	line1       string
 	line2       *string
@@ -60,21 +69,21 @@ type user struct {
 	town        string
 	county      string
 	postcode    string
-	phoneNumber string
-	email       string
+	phoneNumber Phone
+	email       Email
 	createdAt   time.Time
 	updatedAt   time.Time
 }
 
-func (u *user) Id() string           { return u.id }
-func (u *user) Name() string         { return u.name }
-func (u *user) Line1() string        { return u.line1 }
-func (u *user) Line2() *string       { return u.line2 }
-func (u *user) Line3() *string       { return u.line3 }
-func (u *user) Town() string         { return u.town }
-func (u *user) County() string       { return u.county }
-func (u *user) Postcode() string     { return u.postcode }
-func (u *user) PhoneNumber() string  { return u.phoneNumber }
-func (u *user) Email() string        { return u.email }
-func (u *user) CreatedAt() time.Time { return u.createdAt }
-func (u *user) UpdatedAt() time.Time { return u.updatedAt }
+func (u *user) Id() valueobjects.UserId { return u.id }
+func (u *user) Name() string            { return u.name }
+func (u *user) Line1() string           { return u.line1 }
+func (u *user) Line2() *string          { return u.line2 }
+func (u *user) Line3() *string          { return u.line3 }
+func (u *user) Town() string            { return u.town }
+func (u *user) County() string          { return u.county }
+func (u *user) Postcode() string        { return u.postcode }
+func (u *user) PhoneNumber() Phone      { return u.phoneNumber }
+func (u *user) Email() Email            { return u.email }
+func (u *user) CreatedAt() time.Time    { return u.createdAt }
+func (u *user) UpdatedAt() time.Time    { return u.updatedAt }

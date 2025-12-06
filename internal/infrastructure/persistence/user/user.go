@@ -29,7 +29,7 @@ func (u *user) Create(entity domain.UserEntity) (string, error) {
 	_, err := database.ExecuteSQL(
 		u.db,
 		sql,
-		entity.Id(),
+		entity.Id().AsString(),
 		entity.Name(),
 		entity.Line1(),
 		entity.Line2(),
@@ -37,15 +37,15 @@ func (u *user) Create(entity domain.UserEntity) (string, error) {
 		entity.Town(),
 		entity.County(),
 		entity.Postcode(),
-		entity.PhoneNumber(),
-		entity.Email(),
+		entity.PhoneNumber().AsString(),
+		entity.Email().AsString(),
 	)
 
 	if err != nil {
 		return "", fmt.Errorf("user repository, error saving user: %w", err)
 	}
 
-	return entity.Id(), nil
+	return entity.Id().AsString(), nil
 }
 
 func (u *user) GetByEmail(email string) (domain.UserEntity, error) {
@@ -123,9 +123,9 @@ func (u *user) Update(entity domain.UserEntity) error {
 		entity.Town(),
 		entity.County(),
 		entity.Postcode(),
-		entity.PhoneNumber(),
-		entity.Email(),
-		entity.Id(),
+		entity.PhoneNumber().AsString(),
+		entity.Email().AsString(),
+		entity.Id().AsString(),
 	)
 
 	if err != nil {

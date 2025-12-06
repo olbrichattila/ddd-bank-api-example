@@ -6,10 +6,10 @@ import (
 	"github.com/shopspring/decimal"
 
 	accountDomain "eaglebank/internal/domain/account"
-	"eaglebank/internal/domain/shared/helpers"
 	domain "eaglebank/internal/domain/transaction"
 	transactionDomain "eaglebank/internal/domain/transaction"
 	transactionUoWDomain "eaglebank/internal/infrastructure/workofunits"
+	"eaglebank/internal/shared/helpers"
 )
 
 func New(

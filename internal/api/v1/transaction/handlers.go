@@ -7,7 +7,8 @@ import (
 
 	"eaglebank/internal/api/middleware"
 	"eaglebank/internal/application/transaction"
-	"eaglebank/internal/domain/shared/helpers"
+	"eaglebank/internal/shared/helpers"
+	"eaglebank/internal/shared/services"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/shopspring/decimal"
@@ -18,18 +19,24 @@ const (
 	transactionNumberURLParam = "transactionNumber"
 )
 
-func New(transactionService transaction.Transaction) (*Handler, error) {
+type Handler struct {
+	transactionService transaction.Transaction
+	logger             services.Logger
+}
+
+func New(logger services.Logger, transactionService transaction.Transaction) (*Handler, error) {
 	if transactionService == nil {
 		return nil, fmt.Errorf("transaction handler needs transaction service to be passed, it is nil")
 	}
 
+	if logger == nil {
+		return nil, fmt.Errorf("user handler requires logger, nil provided")
+	}
+
 	return &Handler{
 		transactionService: transactionService,
+		logger:             logger,
 	}, nil
-}
-
-type Handler struct {
-	transactionService transaction.Transaction
 }
 
 func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
