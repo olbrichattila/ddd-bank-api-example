@@ -4,6 +4,7 @@ package user
 import (
 	"fmt"
 
+	"eaglebank/internal/domain/shared/helpers"
 	userDomain "eaglebank/internal/domain/user"
 )
 
@@ -35,8 +36,23 @@ func (u *userService) Create(
 	phoneNumber string,
 	email string,
 ) (string, error) {
+	existingUserEntity, err := u.userRepo.GetByEmail(email)
+	if err != nil {
+		return "", fmt.Errorf("could not create new user id %w", err)
+	}
+
+	if existingUserEntity != nil {
+		return "", fmt.Errorf("User already exists")
+	}
+
+	newUserId, err := helpers.GenerateNewUserId()
+	if err != nil {
+		return "", fmt.Errorf("could not create new user id %w", err)
+	}
+
 	userEntity, err := userDomain.New(
 		userDomain.UserInput{
+			Id:          newUserId,
 			Name:        name,
 			Line1:       line1,
 			Line2:       line2,
@@ -75,6 +91,7 @@ func (u *userService) Update(
 
 	userEntity, err := userDomain.New(
 		userDomain.UserInput{
+			Id:          id,
 			Name:        name,
 			Line1:       line1,
 			Line2:       line2,

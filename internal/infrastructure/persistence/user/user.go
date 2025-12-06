@@ -1,13 +1,12 @@
 // Package user
 package user
 
-// @TODO need to check if the user email exists, as this is unique as well before insert, update operations
 import (
 	"database/sql"
 	"fmt"
 
-	"eaglebank/internal/domain/shared/helpers"
 	domain "eaglebank/internal/domain/user"
+	"eaglebank/internal/infrastructure/implementations/database"
 )
 
 func New(db *sql.DB) (domain.User, error) {
@@ -24,18 +23,13 @@ type user struct {
 }
 
 func (u *user) Create(entity domain.UserEntity) (string, error) {
-	// optimistic insert /// @TODO this should come outside, does not belong here
-	newUserId, err := helpers.GenerateNewUserId()
-	if err != nil {
-		return "", err
-	}
-
 	sql := `INSERT INTO users (id, name, line1, line2, line3, town, county, postcode, phone_number, email)
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
 
-	_, err = u.db.Exec(
+	_, err := database.ExecuteSQL(
+		u.db,
 		sql,
-		newUserId,
+		entity.Id(),
 		entity.Name(),
 		entity.Line1(),
 		entity.Line2(),
@@ -51,7 +45,7 @@ func (u *user) Create(entity domain.UserEntity) (string, error) {
 		return "", fmt.Errorf("user repository, error saving user: %w", err)
 	}
 
-	return newUserId, nil
+	return entity.Id(), nil
 }
 
 func (u *user) GetByEmail(email string) (domain.UserEntity, error) {
@@ -75,15 +69,11 @@ func (u *user) getByIdOrEmail(isId bool, value string) (domain.UserEntity, error
 		sql += ` email = $1`
 	}
 
-	rows, err := u.db.Query(sql, value)
-	if err != nil {
-		return nil, fmt.Errorf("query execution error %w", err)
-	}
-	defer rows.Close()
-
-	if rows.Next() {
-		var input domain.UserInput
-		err := rows.Scan(
+	var input domain.UserInput
+	ok, err := database.FetchOneRow(
+		u.db,
+		sql,
+		[]any{
 			&input.Id,
 			&input.Name,
 			&input.Line1,
@@ -96,18 +86,15 @@ func (u *user) getByIdOrEmail(isId bool, value string) (domain.UserEntity, error
 			&input.Email,
 			&input.CreatedAt,
 			&input.UpdatedAt,
-		)
-
-		if err != nil {
-			return nil, err
-		}
-
-		return domain.New(input)
-
+		},
+		value,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("query execution error %w", err)
 	}
 
-	if rows.Err() != nil {
-		return nil, fmt.Errorf("sql fetch error %w", err)
+	if ok {
+		return domain.New(input)
 	}
 
 	return nil, nil
@@ -126,7 +113,8 @@ func (u *user) Update(entity domain.UserEntity) error {
 		email = $9
 	WHERE id = $10`
 
-	_, err := u.db.Exec(
+	_, err := database.ExecuteSQL(
+		u.db,
 		sql,
 		entity.Name(),
 		entity.Line1(),
@@ -150,7 +138,8 @@ func (u *user) Update(entity domain.UserEntity) error {
 func (u *user) Delete(userId string) (int64, error) {
 	sql := `DELETE FROM users WHERE id = $1`
 
-	result, err := u.db.Exec(
+	result, err := database.ExecuteSQL(
+		u.db,
 		sql,
 		userId,
 	)

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	domain "eaglebank/internal/domain/account"
+	"eaglebank/internal/infrastructure/implementations/database"
 
 	"github.com/shopspring/decimal"
 )
@@ -23,62 +24,47 @@ type account struct {
 }
 
 func (a *account) NextAccountNumber() (string, error) {
-	sql := "SELECT nextval('account_number_seq')"
+	sql := "SELECT nextval('account_number_seq') as next_account_number"
 
-	rows, err := a.db.Query(sql)
+	var accountNumber int64
+	ok, err := database.FetchOneRow(a.db, sql, []any{&accountNumber})
 	if err != nil {
-		return "", fmt.Errorf("cannot get account number %w", err)
+		return "", fmt.Errorf("cannot generate account number ")
 	}
-	defer rows.Close()
 
-	if rows.Next() {
-		var accountNumber int64
-		err := rows.Scan(&accountNumber)
-
-		if err != nil {
-			return "", err
-		}
-
+	if ok {
 		return fmt.Sprintf("%08d", accountNumber), nil
-	}
-
-	if rows.Err() != nil {
-		return "", fmt.Errorf("sql fetch error %w", err)
 	}
 
 	return "", fmt.Errorf("cannot generate account number ")
 }
 
 func (a *account) BelongToUser(userId, accountNumber string) (bool, error) {
-	sql := `SELECT COUNT(*) AS account_count
+	sql := `
+	SELECT
+		COUNT(*) AS account_count
 	FROM
 		accounts
 	WHERE
 		account_number = $1
 		AND user_id = $2`
 
-	rows, err := a.db.Query(sql, accountNumber, userId)
+	var accountCount int64
+	ok, err := database.FetchOneRow(a.db, sql, []any{&accountCount}, accountNumber, userId)
 	if err != nil {
-		return false, fmt.Errorf("cannot verify if account belongs to user %w", err)
+		return false, fmt.Errorf("error fetching account count %w", err)
 	}
-	defer rows.Close()
 
-	if rows.Next() {
-		var accountCount int64
-		err := rows.Scan(&accountCount)
-
-		if err != nil {
-			return false, err
-		}
-
+	if ok {
 		return accountCount > 0, nil
 	}
 
-	return false, rows.Err()
+	return false, fmt.Errorf("cannot fetch account count")
 }
 
 func (a *account) Create(entity domain.AccountEntity) error {
-	sql := `INSERT INTO accounts (
+	sql := `
+	INSERT INTO accounts (
 		account_number,
 		user_id,
 		sort_code,
@@ -89,7 +75,8 @@ func (a *account) Create(entity domain.AccountEntity) error {
 	)
 	VALUES ($1, $2, $3, $4, $5, $6, $7)`
 
-	_, err := a.db.Exec(
+	_, err := database.ExecuteSQL(
+		a.db,
 		sql,
 		entity.AccountNumber(),
 		entity.UserId(),
@@ -110,7 +97,8 @@ func (a *account) Create(entity domain.AccountEntity) error {
 func (a *account) Delete(accountNumber string) (int64, error) {
 	sql := `DELETE FROM accounts WHERE account_number = $1`
 
-	result, err := a.db.Exec(
+	result, err := database.ExecuteSQL(
+		a.db,
 		sql,
 		accountNumber,
 	)
@@ -123,7 +111,8 @@ func (a *account) Delete(accountNumber string) (int64, error) {
 }
 
 func (a *account) Get(accountNumber string) (domain.AccountEntity, error) {
-	sql := `SELECT 
+	sql := `
+	SELECT 
 		account_number,
 		user_id,
 		sort_code,
@@ -135,15 +124,12 @@ func (a *account) Get(accountNumber string) (domain.AccountEntity, error) {
 		updated_at 
 	FROM
 		accounts where account_number = $1`
-	rows, err := a.db.Query(sql, accountNumber)
-	if err != nil {
-		return nil, fmt.Errorf("query execution error %w", err)
-	}
-	defer rows.Close()
 
-	if rows.Next() {
-		var input domain.Input
-		err := rows.Scan(
+	var input domain.Input
+	ok, err := database.FetchOneRow(
+		a.db,
+		sql,
+		[]any{
 			&input.AccountNumber,
 			&input.UserId,
 			&input.SortCode,
@@ -153,25 +139,24 @@ func (a *account) Get(accountNumber string) (domain.AccountEntity, error) {
 			&input.Currency,
 			&input.CreatedAt,
 			&input.UpdatedAt,
-		)
+		},
+		accountNumber,
+	)
 
-		if err != nil {
-			return nil, err
-		}
-
-		return domain.New(input)
+	if err != nil {
+		return nil, fmt.Errorf("cannot fetch account %w", err)
 	}
 
-	if rows.Err() != nil {
-		return nil, fmt.Errorf("sql fetch error %w", err)
+	if ok {
+		return domain.New(input)
 	}
 
 	return nil, nil
 }
 
 func (a *account) List(userId string) ([]domain.AccountEntity, error) {
-	var accountEntities []domain.AccountEntity
-	sql := `SELECT 
+	sql := `
+	SELECT 
 		account_number,
 		user_id,
 		sort_code,
@@ -183,43 +168,32 @@ func (a *account) List(userId string) ([]domain.AccountEntity, error) {
 		updated_at 
 	FROM
 		accounts where user_id = $1`
-	rows, err := a.db.Query(sql, userId)
-	if err != nil {
-		return nil, fmt.Errorf("query execution error %w", err)
-	}
-	defer rows.Close()
 
-	for rows.Next() {
-		var input domain.Input
-		err := rows.Scan(
-			&input.AccountNumber,
-			&input.UserId,
-			&input.SortCode,
-			&input.Name,
-			&input.AccountType,
-			&input.Balance,
-			&input.Currency,
-			&input.CreatedAt,
-			&input.UpdatedAt,
-		)
-
-		if err != nil {
-			return nil, err
-		}
-
-		accountEntity, err := domain.New(input)
-		if err != nil {
-			return nil, err
-		}
-
-		accountEntities = append(accountEntities, accountEntity)
-	}
-
-	if rows.Err() != nil {
-		return nil, fmt.Errorf("sql fetch error %w", err)
-	}
-
-	return accountEntities, nil
+	return database.FetchRowsAnMapToEntities(
+		a.db,
+		sql,
+		func(input *domain.Input) []any {
+			return []any{
+				&input.AccountNumber,
+				&input.UserId,
+				&input.SortCode,
+				&input.Name,
+				&input.AccountType,
+				&input.Balance,
+				&input.Currency,
+				&input.CreatedAt,
+				&input.UpdatedAt,
+			}
+		},
+		func(input *domain.Input) (domain.AccountEntity, error) {
+			entity, err := domain.New(*input)
+			if err != nil {
+				return nil, err
+			}
+			return entity, nil
+		},
+		userId,
+	)
 }
 
 func (a *account) Update(entity domain.AccountEntity) error {
@@ -229,7 +203,8 @@ func (a *account) Update(entity domain.AccountEntity) error {
 	WHERE 
 		account_number = $3`
 
-	_, err := a.db.Exec(
+	_, err := database.ExecuteSQL(
+		a.db,
 		sql,
 		entity.Name(),
 		entity.AccountType(),
@@ -251,7 +226,8 @@ func (a *account) UpdateBalance(accountNumber string, amount decimal.Decimal) er
 	WHERE 
 		account_number = $2`
 
-	_, err := a.db.Exec(
+	_, err := database.ExecuteSQL(
+		a.db,
 		sql,
 		amount.StringFixed(2),
 		accountNumber,

@@ -76,7 +76,6 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 
 	transactionList, err := h.transactionService.List(accountNumber)
 	if err != nil {
-		fmt.Println(err)
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}

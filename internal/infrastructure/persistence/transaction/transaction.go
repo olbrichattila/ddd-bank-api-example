@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	domain "eaglebank/internal/domain/transaction"
+	"eaglebank/internal/infrastructure/implementations/database"
 )
 
 func New(db *sql.DB) (domain.Transaction, error) {
@@ -22,30 +23,26 @@ type transaction struct {
 }
 
 func (a *transaction) BelongToUser(accountNumber, transactionId string) (bool, error) {
-	sql := `SELECT COUNT(*) as cnt
+	sql := `
+		SELECT
+			COUNT(*) as cnt
 		FROM transactions t
 		WHERE
 			t.account_number = $1
 			AND id = $2`
 
-	rows, err := a.db.Query(sql, accountNumber, transactionId)
+	var accountCount int64
+	ok, err := database.FetchOneRow(a.db, sql, []any{&accountCount}, accountNumber, transactionId)
 	if err != nil {
 		return false, fmt.Errorf("cannot verify if transaction belongs to the account %w", err)
 	}
-	defer rows.Close()
 
-	if rows.Next() {
-		var accountCount int64
-		err := rows.Scan(&accountCount)
-
-		if err != nil {
-			return false, err
-		}
-
+	if ok {
 		return accountCount > 0, nil
 	}
 
-	return false, rows.Err()
+	return false, fmt.Errorf("Cannot retrieve data if the transaction belongs to the user")
+
 }
 
 func (t *transaction) Create(entity domain.TransactionEntity) error {
@@ -54,7 +51,8 @@ func (t *transaction) Create(entity domain.TransactionEntity) error {
 		id, account_number, user_id, amount, currency, type, reference
 	) VALUES ($1, $2, $3, $4, $5, $6, $7)`
 
-	_, err := t.db.Exec(
+	_, err := database.ExecuteSQL(
+		t.db,
 		sql,
 		entity.Id(),
 		entity.AccountNumber(),
@@ -73,35 +71,32 @@ func (t *transaction) Create(entity domain.TransactionEntity) error {
 }
 
 func (t *transaction) Get(transactionId string) (domain.TransactionEntity, error) {
-	sql := `SELECT 
+	sql := `
+	SELECT 
 		id, account_number, user_id, amount, currency, type, reference, created_at
 	FROM
 		transactions
 	WHERE id = $1`
 
-	rows, err := t.db.Query(sql, transactionId)
+	var input domain.Input
+	ok, err := database.FetchOneRow(t.db, sql, []any{
+		&input.Id,
+		&input.AccountNumber,
+		&input.UserId,
+		&input.Amount,
+		&input.Currency,
+		&input.Type,
+		&input.Reference,
+		&input.CreatedAt,
+	},
+		transactionId,
+	)
+
 	if err != nil {
-		return nil, fmt.Errorf("query execution error %w", err)
+		return nil, fmt.Errorf("cannot get transaction %w", err)
 	}
-	defer rows.Close()
 
-	if rows.Next() {
-		var input domain.Input
-		err := rows.Scan(
-			&input.Id,
-			&input.AccountNumber,
-			&input.UserId,
-			&input.Amount,
-			&input.Currency,
-			&input.Type,
-			&input.Reference,
-			&input.CreatedAt,
-		)
-
-		if err != nil {
-			return nil, err
-		}
-
+	if ok {
 		return domain.New(input)
 	}
 
@@ -109,44 +104,34 @@ func (t *transaction) Get(transactionId string) (domain.TransactionEntity, error
 }
 
 func (t *transaction) List(accountNumber string) ([]domain.TransactionEntity, error) {
-	sql := `SELECT 
+	sql := `
+		SELECT 
 			id, account_number, user_id, amount, currency, type, reference, created_at 
 		FROM
 			transactions where account_number = $1`
 
-	rows, err := t.db.Query(sql, accountNumber)
-	if err != nil {
-		return nil, fmt.Errorf("query execution error %w", err)
-	}
-	defer rows.Close()
-
-	var transactions []domain.TransactionEntity
-
-	for rows.Next() {
-		var input domain.Input
-		err := rows.Scan(
-			&input.Id,
-			&input.AccountNumber,
-			&input.UserId,
-			&input.Amount,
-			&input.Currency,
-			&input.Type,
-			&input.Reference,
-			&input.CreatedAt,
-		)
-
-		if err != nil {
-			return nil, err
-		}
-
-		transaction, err := domain.New(input)
-		if err != nil {
-			return nil, err
-		}
-
-		transactions = append(transactions, transaction)
-
-	}
-
-	return transactions, nil
+	return database.FetchRowsAnMapToEntities(
+		t.db,
+		sql,
+		func(input *domain.Input) []any {
+			return []any{
+				&input.Id,
+				&input.AccountNumber,
+				&input.UserId,
+				&input.Amount,
+				&input.Currency,
+				&input.Type,
+				&input.Reference,
+				&input.CreatedAt,
+			}
+		},
+		func(input *domain.Input) (domain.TransactionEntity, error) {
+			entity, err := domain.New(*input)
+			if err != nil {
+				return nil, err
+			}
+			return entity, nil
+		},
+		accountNumber,
+	)
 }
