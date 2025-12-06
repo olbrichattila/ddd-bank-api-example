@@ -1,14 +1,14 @@
 package transaction
 
 import (
-	"database/sql"
 	"fmt"
 
 	domain "eaglebank/internal/domain/transaction"
+	"eaglebank/internal/infrastructure/dbexecutor"
 	"eaglebank/internal/infrastructure/implementations/database"
 )
 
-func New(db *sql.DB) (domain.Transaction, error) {
+func New(db dbexecutor.DbExecutor) (domain.Transaction, error) {
 	if db == nil {
 		return nil, fmt.Errorf("db is nil in transaction repository")
 	}
@@ -19,7 +19,7 @@ func New(db *sql.DB) (domain.Transaction, error) {
 }
 
 type transaction struct {
-	db *sql.DB
+	db dbexecutor.DbExecutor
 }
 
 func (a *transaction) BelongToUser(accountNumber, transactionId string) (bool, error) {

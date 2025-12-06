@@ -2,10 +2,11 @@ package database
 
 import (
 	"database/sql"
+	"eaglebank/internal/infrastructure/dbexecutor"
 )
 
 func FetchOneRow(
-	db *sql.DB,
+	db dbexecutor.DbExecutor,
 	sql string,
 	mapping []any,
 	params ...any,
@@ -28,7 +29,7 @@ func FetchOneRow(
 }
 
 func FetchRowsAnMapToEntities[T, T2 any](
-	db *sql.DB,
+	db dbexecutor.DbExecutor,
 	sql string,
 	mapperCb func(*T) []any,
 	mappedCb func(*T) (T2, error),
@@ -64,26 +65,25 @@ func FetchRowsAnMapToEntities[T, T2 any](
 }
 
 // This runs on a new transaction
-func ExecuteSQL(db *sql.DB, sql string, params ...any) (sqlResult sql.Result, err error) {
-	tx, err := db.Begin()
-	if err != nil {
-		return
-	}
+func ExecuteSQL(db dbexecutor.DbExecutor, sql string, params ...any) (sql.Result, error) {
+	// tx, err := db.Begin()
+	// if err != nil {
+	// 	return
+	// }
 
-	defer func() {
-		if err != nil {
-			txErr := tx.Rollback()
-			if txErr != nil {
-				err = txErr
-			}
-			return
-		}
-		txErr := tx.Commit()
-		if txErr != nil {
-			err = txErr
-		}
-	}()
+	// defer func() {
+	// 	if err != nil {
+	// 		txErr := tx.Rollback()
+	// 		if txErr != nil {
+	// 			err = txErr
+	// 		}
+	// 		return
+	// 	}
+	// 	txErr := tx.Commit()
+	// 	if txErr != nil {
+	// 		err = txErr
+	// 	}
+	// }()
 
-	sqlResult, err = tx.Exec(sql, params...)
-	return
+	return db.Exec(sql, params...)
 }

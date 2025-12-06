@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"eaglebank/internal/infrastructure/implementations/config"
-	databasae "eaglebank/internal/infrastructure/implementations/databasae"
+	databasae "eaglebank/internal/infrastructure/implementations/database"
 )
 
 func main() {

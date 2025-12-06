@@ -1,16 +1,16 @@
 package account
 
 import (
-	"database/sql"
 	"fmt"
 
 	domain "eaglebank/internal/domain/account"
+	"eaglebank/internal/infrastructure/dbexecutor"
 	"eaglebank/internal/infrastructure/implementations/database"
 
 	"github.com/shopspring/decimal"
 )
 
-func New(db *sql.DB) (domain.Account, error) {
+func New(db dbexecutor.DbExecutor) (domain.Account, error) {
 	if db == nil {
 		return nil, fmt.Errorf("db is nil in account repository")
 	}
@@ -20,7 +20,7 @@ func New(db *sql.DB) (domain.Account, error) {
 }
 
 type account struct {
-	db *sql.DB
+	db dbexecutor.DbExecutor
 }
 
 func (a *account) NextAccountNumber() (string, error) {

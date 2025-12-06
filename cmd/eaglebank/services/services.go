@@ -26,7 +26,7 @@ func New(repositories *repositories.Repositories) (*Services, error) {
 		return nil, fmt.Errorf("Cannot create account service")
 	}
 
-	transactionService, err := transaction.New(repositories.Transaction, repositories.Account)
+	transactionService, err := transaction.New(repositories.Transaction, repositories.Account, repositories.TransactionUow)
 	if err != nil {
 		return nil, fmt.Errorf("Cannot create account service")
 	}

@@ -2,14 +2,14 @@
 package user
 
 import (
-	"database/sql"
 	"fmt"
 
 	domain "eaglebank/internal/domain/user"
+	"eaglebank/internal/infrastructure/dbexecutor"
 	"eaglebank/internal/infrastructure/implementations/database"
 )
 
-func New(db *sql.DB) (domain.User, error) {
+func New(db dbexecutor.DbExecutor) (domain.User, error) {
 	if db == nil {
 		return nil, fmt.Errorf("db is nil in user repository")
 	}
@@ -19,7 +19,7 @@ func New(db *sql.DB) (domain.User, error) {
 }
 
 type user struct {
-	db *sql.DB
+	db dbexecutor.DbExecutor
 }
 
 func (u *user) Create(entity domain.UserEntity) (string, error) {
