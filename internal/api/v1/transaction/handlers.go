@@ -49,6 +49,7 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	var req request
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
 		return
 	}
@@ -61,12 +62,14 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	decimalAmount, err := decimal.NewFromString(req.Amount)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "Invalid details supplied", http.StatusBadRequest)
 		return
 	}
 
 	err = h.transactionService.Create(decimalAmount, LoggedInUserId.(string), req.Currency, req.Type, accountNumber, &req.Reference)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
@@ -83,12 +86,14 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 
 	transactionList, err := h.transactionService.List(accountNumber)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
 
 	responseJSON, err := h.outboundMappingListTranslator(transactionList)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "User was not found", http.StatusInternalServerError)
 		return
 	}
@@ -105,6 +110,7 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 
 	accountEntity, err := h.transactionService.Get(transactionNumber)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
@@ -117,6 +123,7 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	accountResponse := h.outboundMappingTranslator(accountEntity)
 	accountAsJSON, err := json.Marshal(accountResponse)
 	if err != nil {
+		h.logger.Error(err.Error())
 		http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
 		return
 	}
