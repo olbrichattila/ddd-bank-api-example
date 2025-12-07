@@ -33,6 +33,43 @@ This approach might be somewhat overkill for a task of this size. It results in 
 - Not a silver bullet: Overkill for simple apps; best for complex, high-domain-value systems.
 
 
+---
+
+**Layers**
+┌─────────────────────────────────────────────────────────────┐
+│                    Presentation Layer                       │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │   User API  │  │ Account API │  │  Transaction API    │  │
+│  │ (handlers)  │  │ (handlers)  │  │    (handlers)       │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                             │
+┌─────────────────────────────────────────────────────────────┐
+│                   Application Layer                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │User Service │  │Acct Service │  │Transaction Service  │  │
+│  │(use cases)  │  │(use cases)  │  │   (use cases)       │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                             │
+┌─────────────────────────────────────────────────────────────┐
+│                     Domain Layer                            │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │User Entity  │  │Account      │  │Transaction Entity   │  │
+│  │+ Value Objs │  │Entity       │  │+ Business Rules     │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                             │
+┌─────────────────────────────────────────────────────────────┐
+│                Infrastructure Layer                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │User Repo    │  │Account Repo │  │Transaction Repo     │  │
+│  │(PostgreSQL) │  │(PostgreSQL) │  │(PostgreSQL)         │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+
+---
+
 **Why it fits fintech**
 
 Fintech is highly regulated, complex, and rapidly changing, with multiple business domains like payments, lending, trading, and compliance. DDD fits perfectly because it:
