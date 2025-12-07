@@ -112,8 +112,13 @@ go generate ./...
 ```
 
 **A few example BDD (Behavior-Driven Development) test**
-User entity: https://github.com/olbrichattila/ddd-bank-api-example/blob/main/internal/domain/user/entity_test.go
-Transaction service: https://github.com/olbrichattila/ddd-bank-api-example/blob/main/internal/application/transaction/transaction_test.go
+***User entity:***
+
+https://github.com/olbrichattila/ddd-bank-api-example/blob/main/internal/domain/user/entity_test.go
+
+***Transaction service:***
+
+https://github.com/olbrichattila/ddd-bank-api-example/blob/main/internal/application/transaction/transaction_test.go
 
 
 **Makefile**
