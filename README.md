@@ -1,12 +1,8 @@
 # Banking API example
 
 > Note this is still work in progress, working on
-- ACID transaction consistency
 - Variable naming consistency, review
-- Few example BDD tests
-- Dockerize
 - Error handling refinement
-- JWT Token auth and IDOR resource protection only exists for users at this stage.
 
 
 This code represents a sample banking API for an imaginary bank.
@@ -145,6 +141,6 @@ make gen-mocks
 - ~~Dockerize the application for easier testing (e.g., multi-stage Docker build).~~
 - ~~Implement login flow and JWT token generation for testing (currently commented out).~~
 - ~~Apply IDOR protection not only to user resources but to all relevant resource types.~~
-- Add at least a few tests id BDD style with gomock and ginko
+- ~~Add at least a few tests id BDD style with gomock and ginko~~
 - Value object are not consistent everywhere, account number, currency for example, half way refactored
 - Add Linter
