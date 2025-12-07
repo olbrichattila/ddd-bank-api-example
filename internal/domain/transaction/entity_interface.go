@@ -6,6 +6,7 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// TODO: Add value objects here as well, instead of primitives for the getters
 type TransactionEntity interface {
 	Id() string
 	AccountNumber() string
