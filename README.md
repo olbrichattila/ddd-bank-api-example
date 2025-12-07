@@ -120,6 +120,22 @@ User entity: https://github.com/olbrichattila/ddd-bank-api-example/blob/main/int
 Transaction service: https://github.com/olbrichattila/ddd-bank-api-example/blob/main/internal/application/transaction/transaction_test.go
 
 
+**Makefile**
+```bash
+# Build docker container
+make api-build
+# Run build docker container, (not network host works on Linux only, on Mac you need to spin up a postres on the same network, change db settings in .env.migrator)	
+make api-run
+# Start already built docker container	
+make api-start
+# Stop background running container	
+make api-stop
+# Run ginko tests, see setup above	
+make run-test
+# Auto generate mocks, see setup above	
+make gen-mocks
+```
+
 ## Things to Address: TODO:
 
 - ~~Add transaction support in the API.~~

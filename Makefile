@@ -5,4 +5,8 @@ api-run:
 api-start:
 	docker start bankapi
 api-stop:
- 	docker stop bankapi
+	docker stop bankapi
+run-test:
+	ginkgo -v  ./...
+gen-mocks:
+	go generate ./...
