@@ -11,7 +11,7 @@ type Currency struct {
 }
 
 func NewCurrency(value string) (Currency, error) {
-	if !helpers.IsValidAccountType(value) {
+	if !helpers.IsValidCurrency(value) {
 		return Currency{}, fmt.Errorf("invalid account type")
 	}
 

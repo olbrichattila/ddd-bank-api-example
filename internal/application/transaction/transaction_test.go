@@ -3,11 +3,14 @@ package transaction
 import (
 	"fmt"
 	"testing"
+	"time"
 
+	"eaglebank/internal/domain/account"
 	accountMock "eaglebank/internal/infrastructure/persistence/account/mock"
 	transactionMock "eaglebank/internal/infrastructure/persistence/transaction/mock"
 	transactionWoUMock "eaglebank/internal/infrastructure/workofunits/mock"
 
+	"github.com/shopspring/decimal"
 	"go.uber.org/mock/gomock"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -15,8 +18,14 @@ import (
 )
 
 const (
-	accountNumber     = "01000004"
-	transactionNumber = "tan-DZuYEQ"
+	accountNumber           = "01000004"
+	transactionNumber       = "tan-DZuYEQ"
+	userId                  = "usr-d187b52cf4ee97e05e65a7ebd4fd7ef7"
+	transactionTypeDeposit  = "deposit"
+	transactionTypeWithdraw = "withdrawal"
+	currency                = "GBP"
+	sortCode                = "10-10-10"
+	accountType             = "personal"
 )
 
 func TestUserEntity(t *testing.T) {
@@ -107,5 +116,191 @@ var _ = Describe("transaction service test", func() {
 				Expect(ok).To(BeFalse())
 			})
 		})
+	})
+
+	Context("Case: Create transaction", func() {
+		When("When: calling the function, balance is positive, updates new balance, records transaction", func() {
+			It("Than: runs without error, repository called", func() {
+				// Assume
+				returnAccountEntity, err := account.New(
+					account.Input{
+						AccountNumber: accountNumber,
+						UserId:        userId,
+						SortCode:      sortCode,
+						Name:          "John Doe",
+						AccountType:   accountType,
+						Balance:       decimal.NewFromFloat(100),
+						Currency:      currency,
+						CreatedAt:     time.Now(),
+						UpdatedAt:     time.Now(),
+					},
+				)
+
+				// Assert
+				Expect(err).NotTo(HaveOccurred())
+
+				accountRepositoryMock.
+					EXPECT().
+					Get(accountNumber).
+					Return(
+						returnAccountEntity,
+						nil,
+					)
+
+				transactionWoURepositoryMock.
+					EXPECT().
+					Create(gomock.Any(), gomock.Any(), gomock.Any()).
+					Return(nil)
+
+				// Act
+				err = transactionService.Create(
+					decimal.NewFromFloat(100),
+					userId,
+					currency,
+					transactionTypeDeposit,
+					accountNumber,
+					nil,
+				)
+
+				// Assert
+				Expect(err).NotTo(HaveOccurred())
+			})
+		})
+
+		When("When: calling the function, balance is positive, but user tries to withdraw more", func() {
+			It("Than: it returns error", func() {
+				// Assume
+				returnAccountEntity, err := account.New(
+					account.Input{
+						AccountNumber: accountNumber,
+						UserId:        userId,
+						SortCode:      sortCode,
+						Name:          "John Doe",
+						AccountType:   accountType,
+						Balance:       decimal.NewFromFloat(100),
+						Currency:      currency,
+						CreatedAt:     time.Now(),
+						UpdatedAt:     time.Now(),
+					},
+				)
+
+				// Assert
+				Expect(err).NotTo(HaveOccurred())
+
+				accountRepositoryMock.
+					EXPECT().
+					Get(accountNumber).
+					Return(
+						returnAccountEntity,
+						nil,
+					)
+
+				// Act
+				err = transactionService.Create(
+					decimal.NewFromFloat(200),
+					userId,
+					currency,
+					transactionTypeWithdraw,
+					accountNumber,
+					nil,
+				)
+
+				// Assert
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(ContainSubstring("Balance cannot be negative"))
+			})
+		})
+
+		When("When: calling with negative amount", func() {
+			It("Than: returns the correct error", func() {
+				// Assume
+				returnAccountEntity, err := account.New(
+					account.Input{
+						AccountNumber: accountNumber,
+						UserId:        userId,
+						SortCode:      sortCode,
+						Name:          "John Doe",
+						AccountType:   accountType,
+						Balance:       decimal.NewFromFloat(100),
+						Currency:      currency,
+						CreatedAt:     time.Now(),
+						UpdatedAt:     time.Now(),
+					},
+				)
+
+				// Assert
+				Expect(err).NotTo(HaveOccurred())
+
+				accountRepositoryMock.
+					EXPECT().
+					Get(accountNumber).
+					Return(
+						returnAccountEntity,
+						nil,
+					)
+
+				// Act
+				err = transactionService.Create(
+					decimal.NewFromFloat(-100), // negative value
+					userId,
+					currency,
+					transactionTypeDeposit,
+					accountNumber,
+					nil,
+				)
+
+				// Assert
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(ContainSubstring("amount cannot must be between 0 and 10000"))
+			})
+		})
+
+		When("When: calling with too large amount", func() {
+			It("Than: returns the correct error", func() {
+				// Assume
+				returnAccountEntity, err := account.New(
+					account.Input{
+						AccountNumber: accountNumber,
+						UserId:        userId,
+						SortCode:      sortCode,
+						Name:          "John Doe",
+						AccountType:   accountType,
+						Balance:       decimal.NewFromFloat(100),
+						Currency:      currency,
+						CreatedAt:     time.Now(),
+						UpdatedAt:     time.Now(),
+					},
+				)
+
+				// Assert
+				Expect(err).NotTo(HaveOccurred())
+
+				accountRepositoryMock.
+					EXPECT().
+					Get(accountNumber).
+					Return(
+						returnAccountEntity,
+						nil,
+					)
+
+				// Act
+				err = transactionService.Create(
+					decimal.NewFromFloat(10001), // negative value
+					userId,
+					currency,
+					transactionTypeDeposit,
+					accountNumber,
+					nil,
+				)
+
+				// Assert
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(ContainSubstring("amount cannot must be between 0 and 10000"))
+			})
+		})
+
+		// TODO, we could add further test, with all the validation rules working on domain entity level
+		// Testing 0, and max 10000 amount boundary is working, not just bigger, smaller
+		// amd more...
 	})
 })
