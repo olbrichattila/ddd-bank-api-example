@@ -2,6 +2,7 @@ package account
 
 import "github.com/shopspring/decimal"
 
+//go:generate mockgen -destination=../../infrastructure/persistence/account/mock/account-mock.go -package=mock . Account
 type Account interface {
 	BelongToUser(userId, accountNumber string) (bool, error)
 	Create(entity AccountEntity) error

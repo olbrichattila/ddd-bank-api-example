@@ -91,6 +91,34 @@ https://github.com/olbrichattila/godbmigrator_cmd
 I chose to use raw SQL instead of relying on an ORM. While ORMs are convenient and powerful, in my opinion, for data-critical applications raw SQL (or stored procedures) provides greater control, transparency, and resilience. This approach makes data operations more predictable and easier to optimize, especially when correctness and performance are critical.
 
 
+**Testing**
+
+Installation, this does not come default like testify:
+```bash
+go install github.com/onsi/ginkgo/v2/ginkgo@latest
+```
+
+Run:
+```bash
+ginkgo ./...
+```
+
+**Mocking**
+Used gomock to auto generate mocks: this also needs to be installed:
+```bash
+go install github.com/golang/mock/mockgen@latest
+go get github.com/golang/mock/gomock
+```
+
+To re-generate all mocks:
+```bash
+go generate ./...
+```
+
+**A few example BDD (Behavior-Driven Development) test**
+User entity: 
+
+
 ## Things to Address: TODO:
 
 - ~~Add transaction support in the API.~~
