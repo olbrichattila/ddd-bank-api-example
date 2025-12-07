@@ -6,12 +6,12 @@ import (
 	"net/http"
 
 	"eaglebank/internal/infrastructure/implementations/config"
-	databasae "eaglebank/internal/infrastructure/implementations/database"
+	database "eaglebank/internal/infrastructure/implementations/database"
 )
 
 func main() {
 	cfg := config.New()
-	dbase, err := databasae.New(cfg)
+	dbase, err := database.New(cfg)
 	if err != nil {
 		fmt.Println("Bootstrap error: ", err.Error())
 		return
