@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"database/sql"
 	"eaglebank/cmd/eaglebank/services"
+	"eaglebank/internal/api/health"
 	"eaglebank/internal/api/v1/account"
 	"eaglebank/internal/api/v1/transaction"
 	"eaglebank/internal/api/v1/user"
@@ -12,9 +14,15 @@ type Handlers struct {
 	User        *user.Handler
 	Account     *account.Handler
 	Transaction *transaction.Handler
+	Health      *health.Handler
 }
 
-func New(cfg configRepository.Config, services *services.Services) (*Handlers, error) {
+func New(db *sql.DB, cfg configRepository.Config, services *services.Services) (*Handlers, error) {
+	healthHandler, err := health.New(db)
+	if err != nil {
+		return nil, err
+	}
+
 	userHandler, err := user.New(cfg, services.Logger, services.User)
 	if err != nil {
 		return nil, err
@@ -34,5 +42,6 @@ func New(cfg configRepository.Config, services *services.Services) (*Handlers, e
 		User:        userHandler,
 		Account:     accountHandler,
 		Transaction: transactionHandler,
+		Health:      healthHandler,
 	}, nil
 }

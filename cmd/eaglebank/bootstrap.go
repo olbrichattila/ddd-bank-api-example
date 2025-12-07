@@ -26,7 +26,7 @@ func Bootstrap(db *sql.DB, cfg configRepository.Config) (*chi.Mux, error) {
 	}
 
 	// Handlers
-	httpHandlers, err := handlers.New(cfg, wiredServices)
+	httpHandlers, err := handlers.New(db, cfg, wiredServices)
 	if err != nil {
 		return nil, err
 	}

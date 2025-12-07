@@ -26,6 +26,8 @@ func New(
 	// Public endpoints
 	r.Post(routeVersionDecorator("login"), httpHandlers.User.Login)
 	r.Post(routeVersionDecorator("users"), httpHandlers.User.Create)
+	r.Get("/health", httpHandlers.Health.Health)
+	r.Get("/ready", httpHandlers.Health.Ready)
 
 	// Authenticated routes
 	r.Group(func(auth chi.Router) {

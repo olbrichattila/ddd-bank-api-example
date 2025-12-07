@@ -70,7 +70,7 @@ This approach might be somewhat overkill for a task of this size. It results in 
 └─────────────────────────────────────────────────────────────┘
 ```
 
-
+---
 
 **Why it fits fintech**
 
@@ -87,6 +87,9 @@ Fintech is highly regulated, complex, and rapidly changing, with multiple busine
 ---
 
 ## About the Application
+
+Added two endpoints to be Kubernetes ready /health and /ready
+The /login endpoint takes a json with the email, NOT secure yet, need hashed password to be added.
 
 **Command Layer (cmd/)**
 
