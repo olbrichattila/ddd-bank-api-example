@@ -1,7 +1,7 @@
 package user
 
 import (
-	userDomain "eaglebank/internal/domain/user"
+	userDomain "atybank/internal/domain/user"
 )
 
 type User interface {

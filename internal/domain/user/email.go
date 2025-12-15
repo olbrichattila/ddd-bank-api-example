@@ -3,7 +3,7 @@ package user
 import (
 	"fmt"
 
-	"eaglebank/internal/shared/helpers"
+	"atybank/internal/shared/helpers"
 )
 
 type Email struct {

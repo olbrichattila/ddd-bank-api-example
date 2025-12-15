@@ -2,7 +2,7 @@
 package implementation
 
 import (
-	"eaglebank/internal/shared/services"
+	"atybank/internal/shared/services"
 	"fmt"
 )
 

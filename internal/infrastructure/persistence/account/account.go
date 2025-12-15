@@ -3,9 +3,9 @@ package account
 import (
 	"fmt"
 
-	domain "eaglebank/internal/domain/account"
-	"eaglebank/internal/infrastructure/dbexecutor"
-	"eaglebank/internal/infrastructure/implementations/database"
+	domain "atybank/internal/domain/account"
+	"atybank/internal/infrastructure/dbexecutor"
+	"atybank/internal/infrastructure/implementations/database"
 
 	"github.com/shopspring/decimal"
 )

@@ -1,6 +1,6 @@
 package account
 
-import accountDomain "eaglebank/internal/domain/account"
+import accountDomain "atybank/internal/domain/account"
 
 type Account interface {
 	BelongToUser(userId, accountNumber string) (bool, error)

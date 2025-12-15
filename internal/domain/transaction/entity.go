@@ -6,7 +6,7 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"eaglebank/internal/shared/helpers"
+	"atybank/internal/shared/helpers"
 )
 
 const (

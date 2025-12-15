@@ -3,12 +3,12 @@ package services
 import (
 	"fmt"
 
-	"eaglebank/cmd/eaglebank/repositories"
-	"eaglebank/internal/application/account"
-	"eaglebank/internal/application/transaction"
-	"eaglebank/internal/application/user"
-	"eaglebank/internal/shared/services"
-	serviceImplementations "eaglebank/internal/shared/services/implementation"
+	"atybank/cmd/atybank/repositories"
+	"atybank/internal/application/account"
+	"atybank/internal/application/transaction"
+	"atybank/internal/application/user"
+	"atybank/internal/shared/services"
+	serviceImplementations "atybank/internal/shared/services/implementation"
 )
 
 type Services struct {

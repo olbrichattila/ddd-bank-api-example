@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"eaglebank/internal/shared/helpers"
-	"eaglebank/internal/shared/services"
+	"atybank/internal/shared/helpers"
+	"atybank/internal/shared/services"
 )
 
 func UserGuard(logger services.Logger) func(http.Handler) http.Handler {

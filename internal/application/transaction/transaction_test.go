@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"eaglebank/internal/domain/account"
-	accountMock "eaglebank/internal/infrastructure/persistence/account/mock"
-	transactionMock "eaglebank/internal/infrastructure/persistence/transaction/mock"
-	transactionWoUMock "eaglebank/internal/infrastructure/workofunits/mock"
+	"atybank/internal/domain/account"
+	accountMock "atybank/internal/infrastructure/persistence/account/mock"
+	transactionMock "atybank/internal/infrastructure/persistence/transaction/mock"
+	transactionWoUMock "atybank/internal/infrastructure/workofunits/mock"
 
 	"github.com/shopspring/decimal"
 	"go.uber.org/mock/gomock"

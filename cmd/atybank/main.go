@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"eaglebank/internal/infrastructure/implementations/config"
-	database "eaglebank/internal/infrastructure/implementations/database"
+	"atybank/internal/infrastructure/implementations/config"
+	database "atybank/internal/infrastructure/implementations/database"
 )
 
 func main() {

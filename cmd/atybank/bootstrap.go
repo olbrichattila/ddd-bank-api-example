@@ -5,11 +5,11 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"eaglebank/cmd/eaglebank/handlers"
-	"eaglebank/cmd/eaglebank/repositories"
-	"eaglebank/cmd/eaglebank/routes"
-	"eaglebank/cmd/eaglebank/services"
-	configRepository "eaglebank/internal/infrastructure/config"
+	"atybank/cmd/atybank/handlers"
+	"atybank/cmd/atybank/repositories"
+	"atybank/cmd/atybank/routes"
+	"atybank/cmd/atybank/services"
+	configRepository "atybank/internal/infrastructure/config"
 )
 
 func Bootstrap(db *sql.DB, cfg configRepository.Config) (*chi.Mux, error) {

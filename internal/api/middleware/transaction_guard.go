@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"eaglebank/internal/application/transaction"
-	"eaglebank/internal/shared/helpers"
+	"atybank/internal/application/transaction"
+	"atybank/internal/shared/helpers"
 )
 
 const (

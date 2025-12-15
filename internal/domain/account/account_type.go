@@ -3,7 +3,7 @@ package account
 import (
 	"fmt"
 
-	"eaglebank/internal/shared/helpers"
+	"atybank/internal/shared/helpers"
 )
 
 type AccountType struct {

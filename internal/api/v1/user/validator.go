@@ -1,6 +1,6 @@
 package user
 
-import "eaglebank/internal/shared/helpers"
+import "atybank/internal/shared/helpers"
 
 func (h *Handler) validate(req createUserRequest) bool {
 

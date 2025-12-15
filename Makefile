@@ -1,5 +1,5 @@
 run:
-	go run ./cmd//eaglebank
+	go run ./cmd//atybank
 api-build:
 	docker build -t bankapi .
 api-run:

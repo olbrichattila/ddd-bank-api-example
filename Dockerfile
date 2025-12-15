@@ -8,7 +8,7 @@ COPY internal/ ./internal
 COPY cmd/ ./cmd
 
 RUN go install github.com/olbrichattila/godbmigrator_cmd/cmd/migrator@latest
-RUN go build -o bankapi ./cmd/eaglebank
+RUN go build -o bankapi ./cmd/atybank
 
 # Stage 2: Runtime
 FROM debian:bookworm-slim

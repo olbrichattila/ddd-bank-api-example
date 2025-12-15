@@ -1,13 +1,13 @@
 package handlers
 
 import (
+	"atybank/cmd/atybank/services"
+	"atybank/internal/api/health"
+	"atybank/internal/api/v1/account"
+	"atybank/internal/api/v1/transaction"
+	"atybank/internal/api/v1/user"
+	configRepository "atybank/internal/infrastructure/config"
 	"database/sql"
-	"eaglebank/cmd/eaglebank/services"
-	"eaglebank/internal/api/health"
-	"eaglebank/internal/api/v1/account"
-	"eaglebank/internal/api/v1/transaction"
-	"eaglebank/internal/api/v1/user"
-	configRepository "eaglebank/internal/infrastructure/config"
 )
 
 type Handlers struct {

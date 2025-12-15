@@ -3,7 +3,7 @@ package account
 import (
 	"fmt"
 
-	accountDomain "eaglebank/internal/domain/account"
+	accountDomain "atybank/internal/domain/account"
 
 	"github.com/shopspring/decimal"
 )

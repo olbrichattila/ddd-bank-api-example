@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"eaglebank/internal/domain/valueobjects"
+	"atybank/internal/domain/valueobjects"
 )
 
 type UserInput struct {

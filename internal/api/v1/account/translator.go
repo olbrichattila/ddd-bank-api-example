@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
-	accountDomain "eaglebank/internal/domain/account"
+	accountDomain "atybank/internal/domain/account"
 )
 
 func (h *Handler) outboundMappingTranslator(accountEntity accountDomain.AccountEntity) accountResponse {

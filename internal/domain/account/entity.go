@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"eaglebank/internal/domain/valueobjects"
+	"atybank/internal/domain/valueobjects"
 
 	"github.com/shopspring/decimal"
 )

@@ -4,9 +4,9 @@ package user
 import (
 	"fmt"
 
-	domain "eaglebank/internal/domain/user"
-	"eaglebank/internal/infrastructure/dbexecutor"
-	"eaglebank/internal/infrastructure/implementations/database"
+	domain "atybank/internal/domain/user"
+	"atybank/internal/infrastructure/dbexecutor"
+	"atybank/internal/infrastructure/implementations/database"
 )
 
 func New(db dbexecutor.DbExecutor) (domain.User, error) {

@@ -3,10 +3,10 @@ package routes
 import (
 	"fmt"
 
-	"eaglebank/cmd/eaglebank/handlers"
-	"eaglebank/cmd/eaglebank/services"
-	"eaglebank/internal/api/middleware"
-	configRepository "eaglebank/internal/infrastructure/config"
+	"atybank/cmd/atybank/handlers"
+	"atybank/cmd/atybank/services"
+	"atybank/internal/api/middleware"
+	configRepository "atybank/internal/infrastructure/config"
 
 	"github.com/go-chi/chi/v5"
 )

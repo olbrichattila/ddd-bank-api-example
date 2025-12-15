@@ -1,7 +1,7 @@
 package user
 
 import (
-	"eaglebank/internal/domain/valueobjects"
+	"atybank/internal/domain/valueobjects"
 	"time"
 )
 

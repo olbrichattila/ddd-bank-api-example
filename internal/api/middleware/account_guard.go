@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"eaglebank/internal/application/account"
-	"eaglebank/internal/shared/helpers"
+	"atybank/internal/application/account"
+	"atybank/internal/shared/helpers"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"

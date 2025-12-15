@@ -3,7 +3,7 @@ package transaction
 import (
 	"github.com/shopspring/decimal"
 
-	domain "eaglebank/internal/domain/transaction"
+	domain "atybank/internal/domain/transaction"
 )
 
 type Transaction interface {

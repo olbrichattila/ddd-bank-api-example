@@ -3,7 +3,7 @@ package valueobjects
 import (
 	"fmt"
 
-	"eaglebank/internal/shared/helpers"
+	"atybank/internal/shared/helpers"
 )
 
 type UserId struct {

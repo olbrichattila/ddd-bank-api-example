@@ -1,4 +1,4 @@
-module eaglebank
+module atybank
 
 go 1.25.4
 

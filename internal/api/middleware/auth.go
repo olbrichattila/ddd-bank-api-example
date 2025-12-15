@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"eaglebank/internal/shared/helpers"
+	"atybank/internal/shared/helpers"
 )
 
 type contextKey string

@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"eaglebank/internal/infrastructure/config"
-	databaseInterface "eaglebank/internal/infrastructure/database"
+	"atybank/internal/infrastructure/config"
+	databaseInterface "atybank/internal/infrastructure/database"
 
 	_ "github.com/lib/pq"
 )

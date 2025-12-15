@@ -4,15 +4,15 @@ import (
 	"database/sql"
 	"fmt"
 
-	accountDomain "eaglebank/internal/domain/account"
-	transactionDomain "eaglebank/internal/domain/transaction"
-	userDomain "eaglebank/internal/domain/user"
-	transactionUoWDomain "eaglebank/internal/infrastructure/workofunits"
+	accountDomain "atybank/internal/domain/account"
+	transactionDomain "atybank/internal/domain/transaction"
+	userDomain "atybank/internal/domain/user"
+	transactionUoWDomain "atybank/internal/infrastructure/workofunits"
 
-	workOfUnits "eaglebank/internal/infrastructure/implementations/transactionwou"
-	"eaglebank/internal/infrastructure/persistence/account"
-	"eaglebank/internal/infrastructure/persistence/transaction"
-	"eaglebank/internal/infrastructure/persistence/user"
+	workOfUnits "atybank/internal/infrastructure/implementations/transactionwou"
+	"atybank/internal/infrastructure/persistence/account"
+	"atybank/internal/infrastructure/persistence/transaction"
+	"atybank/internal/infrastructure/persistence/user"
 )
 
 type Repositories struct {

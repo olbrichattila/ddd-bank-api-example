@@ -1,7 +1,7 @@
 package workofunits
 
 import (
-	"eaglebank/internal/domain/transaction"
+	"atybank/internal/domain/transaction"
 
 	"github.com/shopspring/decimal"
 )

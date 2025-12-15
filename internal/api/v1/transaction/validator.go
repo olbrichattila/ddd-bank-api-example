@@ -1,6 +1,6 @@
 package transaction
 
-import "eaglebank/internal/shared/helpers"
+import "atybank/internal/shared/helpers"
 
 func (h *Handler) validateRequest(req request) bool {
 	if !helpers.IsValidCurrency(req.Currency) ||

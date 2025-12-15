@@ -8,10 +8,10 @@ import (
 	"database/sql"
 	"fmt"
 
-	"eaglebank/internal/domain/transaction"
-	accountRepository "eaglebank/internal/infrastructure/persistence/account"
-	transactionRepository "eaglebank/internal/infrastructure/persistence/transaction"
-	domainWou "eaglebank/internal/infrastructure/workofunits"
+	"atybank/internal/domain/transaction"
+	accountRepository "atybank/internal/infrastructure/persistence/account"
+	transactionRepository "atybank/internal/infrastructure/persistence/transaction"
+	domainWou "atybank/internal/infrastructure/workofunits"
 
 	"github.com/shopspring/decimal"
 )

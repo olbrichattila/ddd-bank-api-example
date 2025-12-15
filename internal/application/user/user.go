@@ -4,8 +4,8 @@ package user
 import (
 	"fmt"
 
-	userDomain "eaglebank/internal/domain/user"
-	"eaglebank/internal/shared/helpers"
+	userDomain "atybank/internal/domain/user"
+	"atybank/internal/shared/helpers"
 )
 
 func New(userRepo userDomain.User) (User, error) {

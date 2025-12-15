@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"eaglebank/internal/api/middleware"
-	"eaglebank/internal/application/account"
-	"eaglebank/internal/shared/helpers"
-	"eaglebank/internal/shared/services"
+	"atybank/internal/api/middleware"
+	"atybank/internal/application/account"
+	"atybank/internal/shared/helpers"
+	"atybank/internal/shared/services"
 
 	"github.com/go-chi/chi/v5"
 )

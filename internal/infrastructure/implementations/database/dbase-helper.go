@@ -1,8 +1,8 @@
 package database
 
 import (
+	"atybank/internal/infrastructure/dbexecutor"
 	"database/sql"
-	"eaglebank/internal/infrastructure/dbexecutor"
 )
 
 func FetchOneRow(

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	configInterface "eaglebank/internal/infrastructure/config"
+	configInterface "atybank/internal/infrastructure/config"
 
 	"github.com/joho/godotenv"
 )
@@ -52,17 +52,17 @@ func (c *cfg) GetGetDBPort() string {
 }
 
 func (c *cfg) GetDBDatabase() string {
-	return c.getenv("DB_DATABASE", "eaglebank")
+	return c.getenv("DB_DATABASE", "atybank")
 }
 
 func (c *cfg) GetDBUserName() string {
-	return c.getenv("DB_USERNAME", "eaglebank")
+	return c.getenv("DB_USERNAME", "atybank")
 }
 
 // GetDBPassword defaults to a test password, use app without .env file and pass variables via linux env variables
 // for example AWS Secret Manager, Ansible, ....
 func (c *cfg) GetDBPassword() string {
-	return c.getenv("DB_PASSWORD", "eaglebank123")
+	return c.getenv("DB_PASSWORD", "atybank123")
 }
 
 func (c *cfg) getenv(key, def string) string {

@@ -1,7 +1,7 @@
 package account
 
 import (
-	"eaglebank/internal/domain/valueobjects"
+	"atybank/internal/domain/valueobjects"
 	"time"
 
 	"github.com/shopspring/decimal"

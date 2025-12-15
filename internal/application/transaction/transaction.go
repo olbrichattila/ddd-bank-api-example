@@ -5,11 +5,11 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	accountDomain "eaglebank/internal/domain/account"
-	domain "eaglebank/internal/domain/transaction"
-	transactionDomain "eaglebank/internal/domain/transaction"
-	transactionUoWDomain "eaglebank/internal/infrastructure/workofunits"
-	"eaglebank/internal/shared/helpers"
+	accountDomain "atybank/internal/domain/account"
+	domain "atybank/internal/domain/transaction"
+	transactionDomain "atybank/internal/domain/transaction"
+	transactionUoWDomain "atybank/internal/infrastructure/workofunits"
+	"atybank/internal/shared/helpers"
 )
 
 func New(

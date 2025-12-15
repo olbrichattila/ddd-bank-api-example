@@ -3,9 +3,9 @@ package transaction
 import (
 	"fmt"
 
-	domain "eaglebank/internal/domain/transaction"
-	"eaglebank/internal/infrastructure/dbexecutor"
-	"eaglebank/internal/infrastructure/implementations/database"
+	domain "atybank/internal/domain/transaction"
+	"atybank/internal/infrastructure/dbexecutor"
+	"atybank/internal/infrastructure/implementations/database"
 )
 
 func New(db dbexecutor.DbExecutor) (domain.Transaction, error) {
